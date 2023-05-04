@@ -2,6 +2,8 @@
 using HortIntelligentApi.Application.Dtos;
 using HortIntelligentApi.Dades.EntityFramework;
 using HortIntelligentApi.Dades.Repositoris.Interficies;
+using HortIntelligentApi.Domini.Entitats;
+using HortIntelligentApi.Domini.Factories;
 using Microsoft.EntityFrameworkCore;
 
 namespace HortIntelligentApi.Dades.Repositoris.Implementacions
@@ -42,6 +44,12 @@ namespace HortIntelligentApi.Dades.Repositoris.Implementacions
             return await mapper.ProjectTo<VegetalDto>(_context.Vegetals).ToListAsync();
         }
 
-
+        public async Task<VegetalDto> Post(VegetalDto vegetal)
+        {
+            Vegetal vegetalAInsertar = VegetalFactory.CrearVegetal(vegetal);
+            await _context.Vegetals.AddAsync(vegetalAInsertar);
+            await _context.SaveChangesAsync();
+            return await Task.FromResult(mapper.Map<VegetalDto>(vegetalAInsertar));
+        }
     }
 }

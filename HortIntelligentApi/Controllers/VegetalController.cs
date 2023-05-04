@@ -1,7 +1,5 @@
 ﻿using HortIntelligentApi.Application.Dtos;
-using HortIntelligentApi.Domini.Entitats;
 using HortIntelligentApi.Domini.Interficies;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HortIntelligentApi.Controllers
@@ -33,6 +31,12 @@ namespace HortIntelligentApi.Controllers
         public async Task<bool> Delete(int id)
         {
             return await VegetalDomini.Delete(id);
+        }
+
+        [HttpPost]
+        public async Task<VegetalDto> Post([FromBody] VegetalDto vegetal)
+        {
+            return await VegetalDomini.Post(vegetal);
         }
     }
 }

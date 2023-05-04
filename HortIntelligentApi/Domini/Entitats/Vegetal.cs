@@ -19,7 +19,7 @@ namespace HortIntelligentApi.Domini.Entitats
         public HashSet<Camp> Camps { get; set; }
 
         public Vegetal() { }
-        public Vegetal(int id, string nom, string descripcio, string imatgeURL, decimal? temperaturaMaxima, decimal? temperaturaMinima, decimal? temperaturaOptima, decimal? humitatMaxima, decimal? humitatMinima, decimal? humitatOptima, HashSet<Medicio> medicions, HashSet<Camp> camps)
+        public Vegetal(int id, string nom, string descripcio, string imatgeURL, decimal? temperaturaMaxima, decimal? temperaturaMinima, decimal? temperaturaOptima, decimal? humitatMaxima, decimal? humitatMinima, decimal? humitatOptima, HashSet<Medicio> medicions = null, HashSet<Camp> camps = null)
         {
             Id = id;
             Nom = nom;

@@ -28,5 +28,10 @@ namespace HortIntelligentApi.Domini.Implementacions
         {
             return await VegetalRepository.Delete(id);
         }
+
+        public async Task<VegetalDto> Post(VegetalDto vegetal)
+        {
+            return await VegetalRepository.Post(vegetal);
+        }
     }
 }
