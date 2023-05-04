@@ -23,13 +23,13 @@ namespace HortIntelligentApi.Dades.Repositoris.Implementacions
             if (vegetal != null)
             {
                 _context.Vegetals.Remove(vegetal);
-                return true; 
+                await _context.SaveChangesAsync();
+                return await Task.FromResult(true);
             }
             else
             {
                 return await Task.FromResult(false);
             }
-
         }
 
         public async Task<VegetalDto> Get(int id)

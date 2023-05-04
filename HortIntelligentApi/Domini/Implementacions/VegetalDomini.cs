@@ -24,7 +24,7 @@ namespace HortIntelligentApi.Domini.Implementacions
             return await VegetalRepository.Get(id);
         }
 
-        public async Task<int> Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             return await VegetalRepository.Delete(id);
         }
