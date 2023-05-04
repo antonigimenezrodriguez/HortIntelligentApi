@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Reflection.Emit;
 
-namespace HortIntelligentApi.Datos.EntityFramework.Configuracions
+namespace HortIntelligentApi.Dades.EntityFramework.Configuracions
 {
     public class MedicioConfig : IEntityTypeConfiguration<Medicio>
     {

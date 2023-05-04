@@ -4,7 +4,7 @@ using NetTopologySuite;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 
-namespace HortIntelligentApi.Datos.EntityFramework.Seeding
+namespace HortIntelligentApi.Dades.EntityFramework.Seeding
 {
     public static class SeedingHort
     {

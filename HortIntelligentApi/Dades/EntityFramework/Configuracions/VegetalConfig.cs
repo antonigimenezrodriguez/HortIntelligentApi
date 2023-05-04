@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace HortIntelligentApi.Datos.EntityFramework.Configuracions
+namespace HortIntelligentApi.Dades.EntityFramework.Configuracions
 {
     public class VegetalConfig : IEntityTypeConfiguration<Vegetal>
     {
