@@ -1,4 +1,6 @@
-﻿using HortIntelligentApi.Domini.Interficies;
+﻿using HortIntelligentApi.Application.Dtos;
+using HortIntelligentApi.Domini.Entitats;
+using HortIntelligentApi.Domini.Interficies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +15,12 @@ namespace HortIntelligentApi.Controllers
         public VegetalController(IVegetalDomini vegetalDomini)
         {
             VegetalDomini = vegetalDomini;
+        }
+
+        [HttpGet]
+        public async Task<IList<Vegetal>> Get()
+        {
+            return await VegetalDomini.GetAll();
         }
     }
 }
