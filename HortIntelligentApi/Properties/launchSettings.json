@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "HuertoInteligenteApi": {
+    "HortIntelligentApi": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

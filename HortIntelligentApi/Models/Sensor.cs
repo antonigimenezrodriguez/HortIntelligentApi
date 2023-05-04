@@ -1,4 +1,4 @@
-﻿namespace HuertoInteligenteApi.Models
+﻿namespace HortIntelligentApi.Models
 {
     public class Sensor
     {
@@ -8,5 +8,8 @@
         public string Descripcio { get; set; }
         public EnumTipusSensor Tipus { get; set; }
         public string ImatgeURL { get; set; }
+
+        //Navegació
+        public HashSet<Medicio> Medicions { get; set; }
     }
 }

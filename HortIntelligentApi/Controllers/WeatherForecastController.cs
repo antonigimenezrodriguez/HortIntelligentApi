@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace HuertoInteligenteApi.Controllers
+namespace HortIntelligentApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]

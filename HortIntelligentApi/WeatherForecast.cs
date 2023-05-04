@@ -1,4 +1,4 @@
-namespace HuertoInteligenteApi
+namespace HortIntelligentApi
 {
     public class WeatherForecast
     {
