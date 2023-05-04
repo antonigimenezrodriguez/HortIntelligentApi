@@ -1,6 +1,8 @@
-﻿namespace HortIntelligentApi.Models
+﻿using HortIntelligentApi.Domini.Entitats;
+
+namespace HortIntelligentApi.Application.Dtos
 {
-    public class Sensor
+    public class SensorDto
     {
         public int Id { get; set; }
         public string Nom { get; set; }
@@ -8,8 +10,6 @@
         public string Descripcio { get; set; }
         public EnumTipusSensor Tipus { get; set; }
         public string ImatgeURL { get; set; }
-
-        //Navegació
         public HashSet<Medicio> Medicions { get; set; }
     }
 }

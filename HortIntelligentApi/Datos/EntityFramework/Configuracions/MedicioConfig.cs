@@ -1,9 +1,9 @@
-﻿using HortIntelligentApi.Models;
+﻿using HortIntelligentApi.Domini.Entitats;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Reflection.Emit;
 
-namespace HortIntelligentApi.EntityFramework.Configuracions
+namespace HortIntelligentApi.Datos.EntityFramework.Configuracions
 {
     public class MedicioConfig : IEntityTypeConfiguration<Medicio>
     {

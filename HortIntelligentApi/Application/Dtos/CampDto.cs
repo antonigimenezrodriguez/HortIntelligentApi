@@ -1,8 +1,8 @@
 ﻿using NetTopologySuite.Geometries;
 
-namespace HortIntelligentApi.Models
+namespace HortIntelligentApi.Application.Dtos
 {
-    public class Camp
+    public class CampDto
     {
         public int Id { get; set; }
         public string Localitzacio { get; set; }
@@ -10,8 +10,6 @@ namespace HortIntelligentApi.Models
         public string Observacions { get; set; }
         public string ImatgeURL { get; set; }
 
-        //FK
         public int? VegetalId { get; set; }
-        public Vegetal Vegetal { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-using HortIntelligentApi.EntityFramework;
+using HortIntelligentApi.Datos.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 
 namespace HortIntelligentApi

@@ -1,9 +1,9 @@
-﻿using HortIntelligentApi.EntityFramework.Seeding;
-using HortIntelligentApi.Models;
+﻿using HortIntelligentApi.Datos.EntityFramework.Seeding;
+using HortIntelligentApi.Domini.Entitats;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace HortIntelligentApi.EntityFramework
+namespace HortIntelligentApi.Datos.EntityFramework
 {
     public class HortIntelligentDbContext : DbContext
     {

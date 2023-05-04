@@ -1,6 +1,8 @@
-﻿namespace HortIntelligentApi.Models
+﻿using HortIntelligentApi.Domini.Entitats;
+
+namespace HortIntelligentApi.Application.Dtos
 {
-    public class Vegetal
+    public class VegetalDto
     {
         public int Id { get; set; }
         public string Nom { get; set; }

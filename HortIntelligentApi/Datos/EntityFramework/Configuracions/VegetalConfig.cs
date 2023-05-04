@@ -1,8 +1,8 @@
-﻿using HortIntelligentApi.Models;
+﻿using HortIntelligentApi.Domini.Entitats;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace HortIntelligentApi.EntityFramework.Configuracions
+namespace HortIntelligentApi.Datos.EntityFramework.Configuracions
 {
     public class VegetalConfig : IEntityTypeConfiguration<Vegetal>
     {

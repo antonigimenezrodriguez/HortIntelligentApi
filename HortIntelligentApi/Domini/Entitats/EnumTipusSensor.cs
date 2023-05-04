@@ -1,4 +1,4 @@
-﻿namespace HortIntelligentApi.Models
+﻿namespace HortIntelligentApi.Domini.Entitats
 {
     public enum EnumTipusSensor
     {

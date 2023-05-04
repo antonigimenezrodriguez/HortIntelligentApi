@@ -1,10 +1,10 @@
-﻿using HortIntelligentApi.Models;
+﻿using HortIntelligentApi.Domini.Entitats;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 
-namespace HortIntelligentApi.EntityFramework.Seeding
+namespace HortIntelligentApi.Datos.EntityFramework.Seeding
 {
     public static class SeedingHort
     {
@@ -20,7 +20,7 @@ namespace HortIntelligentApi.EntityFramework.Seeding
             modelBuilder.Entity<Vegetal>().HasData(ceba, pastanaga);
 
             var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
-            var camp1 = new Camp() { Id = 1, Localitzacio = "Pati Institut Montilivi", Coordenades = geometryFactory.CreatePoint(new Coordinate(41.964083, 2.8271647))};
+            var camp1 = new Camp() { Id = 1, Localitzacio = "Pati Institut Montilivi", Coordenades = geometryFactory.CreatePoint(new Coordinate(41.964083, 2.8271647)) };
             modelBuilder.Entity<Camp>().HasData(camp1);
         }
     }
