@@ -28,5 +28,11 @@ namespace HortIntelligentApi.Controllers
         {
             return await VegetalDomini.Get(id);
         }
+
+        [HttpDelete("id")]
+        public async Task<int> Delete(int id)
+        {
+            return await VegetalDomini.Delete(id);
+        }
     }
 }

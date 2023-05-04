@@ -17,6 +17,21 @@ namespace HortIntelligentApi.Dades.Repositoris.Implementacions
             this.mapper = mapper;
         }
 
+        public async Task<bool> Delete(int id)
+        {
+            var vegetal = await _context.Vegetals.FindAsync(id);
+            if (vegetal != null)
+            {
+                _context.Vegetals.Remove(vegetal);
+                return true; 
+            }
+            else
+            {
+                return await Task.FromResult(false);
+            }
+
+        }
+
         public async Task<VegetalDto> Get(int id)
         {
             return mapper.Map<VegetalDto>(await _context.Vegetals.FindAsync(id));
@@ -26,5 +41,7 @@ namespace HortIntelligentApi.Dades.Repositoris.Implementacions
         {
             return await mapper.ProjectTo<VegetalDto>(_context.Vegetals).ToListAsync();
         }
+
+
     }
 }

@@ -7,5 +7,6 @@ namespace HortIntelligentApi.Domini.Interficies
     {
         public Task<IList<VegetalDto>> GetAll();
         public Task<VegetalDto> Get(int id);
+        public Task<int> Delete(int id);
     }
 }
