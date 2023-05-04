@@ -2,7 +2,6 @@
 using HortIntelligentApi.Application.Dtos;
 using HortIntelligentApi.Dades.EntityFramework;
 using HortIntelligentApi.Dades.Repositoris.Interficies;
-using HortIntelligentApi.Domini.Entitats;
 using Microsoft.EntityFrameworkCore;
 
 namespace HortIntelligentApi.Dades.Repositoris.Implementacions
