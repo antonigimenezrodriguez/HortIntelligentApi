@@ -51,5 +51,14 @@ namespace HortIntelligentApi.Dades.Repositoris.Implementacions
             await _context.SaveChangesAsync();
             return await Task.FromResult(mapper.Map<VegetalDto>(vegetalAInsertar));
         }
+
+        public async Task<VegetalDto> Put(VegetalDto vegetal)
+        {
+            Vegetal vegetalAEditar = await _context.Vegetals.FindAsync(vegetal.Id);
+            vegetalAEditar.Actualitzar(vegetal);
+            _context.Vegetals.Update(vegetalAEditar);
+            await _context.SaveChangesAsync();
+            return await Task.FromResult(mapper.Map<VegetalDto>(vegetalAEditar));
+        }
     }
 }

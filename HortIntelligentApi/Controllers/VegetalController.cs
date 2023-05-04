@@ -38,5 +38,11 @@ namespace HortIntelligentApi.Controllers
         {
             return await VegetalDomini.Post(vegetal);
         }
+
+        [HttpPut]
+        public async Task<VegetalDto> Put([FromBody] VegetalDto vegetal)
+        {
+            return await VegetalDomini.Put(vegetal);
+        }
     }
 }

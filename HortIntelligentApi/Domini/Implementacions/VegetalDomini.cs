@@ -1,6 +1,5 @@
 ﻿using HortIntelligentApi.Application.Dtos;
 using HortIntelligentApi.Dades.Repositoris.Interficies;
-using HortIntelligentApi.Domini.Entitats;
 using HortIntelligentApi.Domini.Interficies;
 
 namespace HortIntelligentApi.Domini.Implementacions
@@ -32,6 +31,11 @@ namespace HortIntelligentApi.Domini.Implementacions
         public async Task<VegetalDto> Post(VegetalDto vegetal)
         {
             return await VegetalRepository.Post(vegetal);
+        }
+
+        public async Task<VegetalDto> Put(VegetalDto vegetal)
+        {
+            return await VegetalRepository.Put(vegetal);
         }
     }
 }
