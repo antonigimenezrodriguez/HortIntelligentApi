@@ -5,6 +5,7 @@ using System.Reflection;
 
 namespace HortIntelligentApi.Dades.EntityFramework
 {
+#pragma warning disable CS1591
     public class HortIntelligentDbContext : DbContext
     {
         public HortIntelligentDbContext(DbContextOptions options) : base(options)
@@ -26,4 +27,5 @@ namespace HortIntelligentApi.Dades.EntityFramework
             SeedingHort.Seed(modelBuilder);
         }
     }
+#pragma warning restore CS1591
 }

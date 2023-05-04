@@ -4,6 +4,8 @@ using HortIntelligentApi.Dades.Repositoris.Interficies;
 using HortIntelligentApi.Domini.Implementacions;
 using HortIntelligentApi.Domini.Interficies;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace HortIntelligentApi
 {
@@ -21,7 +23,31 @@ namespace HortIntelligentApi
             services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Hort Intel·ligent API",
+                    Description = "API per guardar y consultar les dades dels sensors Arduino",
+                    //TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Departament Informàtica Institut Montilivi",
+                        Url = new Uri("https://www.institutmontilivi.cat")
+                    },
+                    /*License = new OpenApiLicense
+                    {
+                        Name = "Example License",
+                        Url = new Uri("https://example.com/license")
+                    }*/
+                    
+                });
+
+                // using System.Reflection;
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            });
 
             var connectionString = Configuration.GetConnectionString("DefaultConnection"); //Recoger cadena de conexión del appsettings.json
             services.AddDbContext<HortIntelligentDbContext>(opciones =>
