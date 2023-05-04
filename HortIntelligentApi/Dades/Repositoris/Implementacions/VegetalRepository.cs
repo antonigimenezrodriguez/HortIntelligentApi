@@ -1,4 +1,5 @@
-﻿using HortIntelligentApi.Application.Dtos;
+﻿using AutoMapper;
+using HortIntelligentApi.Application.Dtos;
 using HortIntelligentApi.Dades.EntityFramework;
 using HortIntelligentApi.Dades.Repositoris.Interficies;
 using HortIntelligentApi.Domini.Entitats;
@@ -9,14 +10,16 @@ namespace HortIntelligentApi.Dades.Repositoris.Implementacions
     public class VegetalRepository : IVegetalRepository
     {
         private readonly HortIntelligentDbContext _context;
+        private readonly IMapper mapper;
 
-        public VegetalRepository(HortIntelligentDbContext context)
+        public VegetalRepository(HortIntelligentDbContext context, IMapper mapper)
         {
             this._context = context;
+            this.mapper = mapper;
         }
-        public async Task<IList<Vegetal>> GetAll()
+        public async Task<IList<VegetalDto>> GetAll()
         {
-            return await _context.Vegetals.ToListAsync();
+            return await mapper.ProjectTo<VegetalDto>(_context.Vegetals).ToListAsync();
         }
     }
 }

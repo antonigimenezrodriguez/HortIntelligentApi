@@ -5,6 +5,6 @@ namespace HortIntelligentApi.Dades.Repositoris.Interficies
 {
     public interface IVegetalRepository
     {
-        public Task<IList<Vegetal>> GetAll();
+        public Task<IList<VegetalDto>> GetAll();
     }
 }

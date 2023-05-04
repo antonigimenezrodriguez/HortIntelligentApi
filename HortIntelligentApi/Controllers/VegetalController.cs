@@ -18,7 +18,7 @@ namespace HortIntelligentApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IList<Vegetal>> Get()
+        public async Task<IList<VegetalDto>> Get()
         {
             return await VegetalDomini.GetAll();
         }

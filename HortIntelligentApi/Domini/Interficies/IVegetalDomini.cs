@@ -5,6 +5,6 @@ namespace HortIntelligentApi.Domini.Interficies
 {
     public interface IVegetalDomini
     {
-        public Task<IList<Vegetal>> GetAll();
+        public Task<IList<VegetalDto>> GetAll();
     }
 }

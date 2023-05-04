@@ -14,7 +14,7 @@ namespace HortIntelligentApi.Domini.Implementacions
             VegetalRepository = vegetalRepository;
         }
 
-        public async Task<IList<Vegetal>> GetAll()
+        public async Task<IList<VegetalDto>> GetAll()
         {
             return await VegetalRepository.GetAll();
         }
