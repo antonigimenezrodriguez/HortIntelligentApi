@@ -18,5 +18,10 @@ namespace HortIntelligentApi.Domini.Implementacions
         {
             return await VegetalRepository.GetAll();
         }
+
+        public async Task<VegetalDto> Get(int id)
+        {
+            return await VegetalRepository.Get(id);
+        }
     }
 }

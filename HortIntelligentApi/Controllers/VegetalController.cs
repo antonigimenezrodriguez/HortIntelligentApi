@@ -22,5 +22,11 @@ namespace HortIntelligentApi.Controllers
         {
             return await VegetalDomini.GetAll();
         }
+
+        [HttpGet("id")]
+        public async Task<VegetalDto> Get(int id)
+        {
+            return await VegetalDomini.Get(id);
+        }
     }
 }

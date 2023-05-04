@@ -16,6 +16,12 @@ namespace HortIntelligentApi.Dades.Repositoris.Implementacions
             this._context = context;
             this.mapper = mapper;
         }
+
+        public async Task<VegetalDto> Get(int id)
+        {
+            return mapper.Map<VegetalDto>(await _context.Vegetals.FindAsync(id));
+        }
+
         public async Task<IList<VegetalDto>> GetAll()
         {
             return await mapper.ProjectTo<VegetalDto>(_context.Vegetals).ToListAsync();
