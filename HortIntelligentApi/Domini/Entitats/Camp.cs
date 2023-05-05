@@ -28,7 +28,7 @@ namespace HortIntelligentApi.Domini.Entitats
             VegetalId = vegetalId;
         }
 
-        public Camp ActualitzarCamp(CampDto campDto)
+        public Camp Actualitzar(CampDto campDto)
         {
             this.Id = campDto.Id;
             this.Localitzacio = campDto.Localitzacio;
