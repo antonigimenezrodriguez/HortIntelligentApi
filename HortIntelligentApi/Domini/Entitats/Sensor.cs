@@ -15,7 +15,7 @@ namespace HortIntelligentApi.Domini.Entitats
         public HashSet<Medicio> Medicions { get; set; }
 
         public Sensor() { }
-        public Sensor(int id, string nom, string model, string descripcio, EnumTipusSensor tipus, string imatgeURL, HashSet<Medicio> medicions)
+        public Sensor(int id, string nom, string model, string descripcio, EnumTipusSensor tipus, string imatgeURL, HashSet<Medicio> medicions = null)
         {
             Id = id;
             Nom = nom;
