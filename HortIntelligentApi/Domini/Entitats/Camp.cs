@@ -7,7 +7,8 @@ namespace HortIntelligentApi.Domini.Entitats
     {
         public int Id { get; set; }
         public string Localitzacio { get; set; }
-        public Point Coordenades { get; set; }
+        public double Latitud { get; set; }
+        public double Longitud { get; set; }
         public string Observacions { get; set; }
         public string ImatgeURL { get; set; }
 
@@ -16,21 +17,23 @@ namespace HortIntelligentApi.Domini.Entitats
         public Vegetal Vegetal { get; set; }
 
         public Camp() { }
-        public Camp(int id, string localitzacio, Point coordenades, string observacions, string imatgeURL, int? vegetalId)
+        public Camp(int id, string localitzacio, double latitud, double longitud, string observacions, string imatgeURL, int? vegetalId)
         {
             Id = id;
             Localitzacio = localitzacio;
-            Coordenades = coordenades;
+            Latitud = latitud;
+            Longitud = longitud;
             Observacions = observacions;
             ImatgeURL = imatgeURL;
             VegetalId = vegetalId;
         }
 
-        public Camp ActualitzarCamp(CampDto campDto)
+        public Camp Actualitzar(CampDto campDto)
         {
             this.Id = campDto.Id;
             this.Localitzacio = campDto.Localitzacio;
-            this.Coordenades = campDto.Coordenades;
+            this.Latitud = campDto.Latitud;
+            this.Longitud = campDto.Longitud;
             this.Observacions = campDto.Observacions;
             this.ImatgeURL = campDto.ImatgeURL;
             this.VegetalId = campDto.VegetalId;

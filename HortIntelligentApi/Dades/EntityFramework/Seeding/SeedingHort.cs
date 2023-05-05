@@ -20,7 +20,7 @@ namespace HortIntelligentApi.Dades.EntityFramework.Seeding
             modelBuilder.Entity<Vegetal>().HasData(ceba, pastanaga);
 
             var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
-            var camp1 = new Camp() { Id = 1, Localitzacio = "Pati Institut Montilivi", Coordenades = geometryFactory.CreatePoint(new Coordinate(41.964083, 2.8271647)) };
+            var camp1 = new Camp() { Id = 1, Localitzacio = "Pati Institut Montilivi", Latitud = 41.964083, Longitud = 2.8271647 };
             modelBuilder.Entity<Camp>().HasData(camp1);
         }
     }

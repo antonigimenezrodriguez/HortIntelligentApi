@@ -1,10 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using NetTopologySuite.Geometries;
 
 #nullable disable
 
-namespace HortIntelligentApi.EntityFramework.Migrations
+namespace HortIntelligentApi.Migrations
 {
     public partial class Inicial : Migration
     {
@@ -55,7 +54,8 @@ namespace HortIntelligentApi.EntityFramework.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Localitzacio = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Coordenades = table.Column<Point>(type: "geography", nullable: true),
+                    Latitud = table.Column<double>(type: "float", nullable: false),
+                    Longitud = table.Column<double>(type: "float", nullable: false),
                     Observacions = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ImatgeURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     VegetalId = table.Column<int>(type: "int", nullable: true)
@@ -107,8 +107,8 @@ namespace HortIntelligentApi.EntityFramework.Migrations
 
             migrationBuilder.InsertData(
                 table: "Camps",
-                columns: new[] { "Id", "Coordenades", "ImatgeURL", "Localitzacio", "Observacions", "VegetalId" },
-                values: new object[] { 1, (NetTopologySuite.Geometries.Point)new NetTopologySuite.IO.WKTReader().Read("SRID=4326;POINT (41.964083 2.8271647)"), null, "Pati Institut Montilivi", null, null });
+                columns: new[] { "Id", "ImatgeURL", "Latitud", "Localitzacio", "Longitud", "Observacions", "VegetalId" },
+                values: new object[] { 1, null, 41.964083000000002, "Pati Institut Montilivi", 2.8271647, null, null });
 
             migrationBuilder.InsertData(
                 table: "Sensors",

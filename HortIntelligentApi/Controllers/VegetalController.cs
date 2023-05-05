@@ -64,7 +64,7 @@ namespace HortIntelligentApi.Controllers
         /// <summary>
         /// Modificar un vegetal.
         /// </summary>
-        /// <param name="vegetal">Vegetal a borrar</param>
+        /// <param name="vegetal">Vegetal a modificar</param>
         /// <returns></returns>
         [HttpPut]
         public async Task<VegetalDto> Put([FromBody] VegetalDto vegetal)

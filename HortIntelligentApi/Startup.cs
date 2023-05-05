@@ -6,6 +6,8 @@ using HortIntelligentApi.Domini.Interficies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using System.Text.Json.Serialization;
+
 
 namespace HortIntelligentApi
 {
@@ -20,9 +22,15 @@ namespace HortIntelligentApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    // open api is currently using system.text.json
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
+
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
@@ -41,11 +49,12 @@ namespace HortIntelligentApi
                         Name = "Example License",
                         Url = new Uri("https://example.com/license")
                     }*/
-                    
+
                 });
 
                 var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
             });
 
             var connectionString = Configuration.GetConnectionString("DefaultConnection"); //Recoger cadena de conexión del appsettings.json
