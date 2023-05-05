@@ -6,14 +6,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using NetTopologySuite.Geometries;
 
 #nullable disable
 
-namespace HortIntelligentApi.EntityFramework.Migrations
+namespace HortIntelligentApi.Migrations
 {
     [DbContext(typeof(HortIntelligentDbContext))]
-    [Migration("20230504073657_Inicial")]
+    [Migration("20230505181302_Inicial")]
     partial class Inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +24,7 @@ namespace HortIntelligentApi.EntityFramework.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("HortIntelligentApi.Models.Camp", b =>
+            modelBuilder.Entity("HortIntelligentApi.Domini.Entitats.Camp", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,16 +32,19 @@ namespace HortIntelligentApi.EntityFramework.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<Point>("Coordenades")
-                        .HasColumnType("geography");
-
                     b.Property<string>("ImatgeURL")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Latitud")
+                        .HasColumnType("float");
 
                     b.Property<string>("Localitzacio")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
+
+                    b.Property<double>("Longitud")
+                        .HasColumnType("float");
 
                     b.Property<string>("Observacions")
                         .HasColumnType("nvarchar(max)");
@@ -60,12 +62,13 @@ namespace HortIntelligentApi.EntityFramework.Migrations
                         new
                         {
                             Id = 1,
-                            Coordenades = (NetTopologySuite.Geometries.Point)new NetTopologySuite.IO.WKTReader().Read("SRID=4326;POINT (41.964083 2.8271647)"),
-                            Localitzacio = "Pati Institut Montilivi"
+                            Latitud = 41.964083000000002,
+                            Localitzacio = "Pati Institut Montilivi",
+                            Longitud = 2.8271647
                         });
                 });
 
-            modelBuilder.Entity("HortIntelligentApi.Models.Medicio", b =>
+            modelBuilder.Entity("HortIntelligentApi.Domini.Entitats.Medicio", b =>
                 {
                     b.Property<DateTime>("DataHora")
                         .HasColumnType("datetime2");
@@ -100,7 +103,7 @@ namespace HortIntelligentApi.EntityFramework.Migrations
                     b.ToTable("Medicions");
                 });
 
-            modelBuilder.Entity("HortIntelligentApi.Models.Sensor", b =>
+            modelBuilder.Entity("HortIntelligentApi.Domini.Entitats.Sensor", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -161,7 +164,7 @@ namespace HortIntelligentApi.EntityFramework.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HortIntelligentApi.Models.Vegetal", b =>
+            modelBuilder.Entity("HortIntelligentApi.Domini.Entitats.Vegetal", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -234,30 +237,30 @@ namespace HortIntelligentApi.EntityFramework.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HortIntelligentApi.Models.Camp", b =>
+            modelBuilder.Entity("HortIntelligentApi.Domini.Entitats.Camp", b =>
                 {
-                    b.HasOne("HortIntelligentApi.Models.Vegetal", "Vegetal")
+                    b.HasOne("HortIntelligentApi.Domini.Entitats.Vegetal", "Vegetal")
                         .WithMany("Camps")
                         .HasForeignKey("VegetalId");
 
                     b.Navigation("Vegetal");
                 });
 
-            modelBuilder.Entity("HortIntelligentApi.Models.Medicio", b =>
+            modelBuilder.Entity("HortIntelligentApi.Domini.Entitats.Medicio", b =>
                 {
-                    b.HasOne("HortIntelligentApi.Models.Camp", "Camp")
+                    b.HasOne("HortIntelligentApi.Domini.Entitats.Camp", "Camp")
                         .WithMany()
                         .HasForeignKey("CampId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HortIntelligentApi.Models.Sensor", "Sensor")
+                    b.HasOne("HortIntelligentApi.Domini.Entitats.Sensor", "Sensor")
                         .WithMany("Medicions")
                         .HasForeignKey("SensorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HortIntelligentApi.Models.Vegetal", "Vegetal")
+                    b.HasOne("HortIntelligentApi.Domini.Entitats.Vegetal", "Vegetal")
                         .WithMany("Medicions")
                         .HasForeignKey("VegetalId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -270,12 +273,12 @@ namespace HortIntelligentApi.EntityFramework.Migrations
                     b.Navigation("Vegetal");
                 });
 
-            modelBuilder.Entity("HortIntelligentApi.Models.Sensor", b =>
+            modelBuilder.Entity("HortIntelligentApi.Domini.Entitats.Sensor", b =>
                 {
                     b.Navigation("Medicions");
                 });
 
-            modelBuilder.Entity("HortIntelligentApi.Models.Vegetal", b =>
+            modelBuilder.Entity("HortIntelligentApi.Domini.Entitats.Vegetal", b =>
                 {
                     b.Navigation("Camps");
 

@@ -6,7 +6,8 @@ namespace HortIntelligentApi.Application.Dtos
     {
         public int Id { get; set; }
         public string Localitzacio { get; set; }
-        public Point Coordenades { get; set; }
+        public double Latitud { get; set; }
+        public double Longitud { get; set; }
         public string Observacions { get; set; }
         public string ImatgeURL { get; set; }
 
