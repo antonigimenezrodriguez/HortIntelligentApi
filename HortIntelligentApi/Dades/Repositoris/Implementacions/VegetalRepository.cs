@@ -10,23 +10,30 @@ namespace HortIntelligentApi.Dades.Repositoris.Implementacions
 {
     public class VegetalRepository : IVegetalRepository
     {
-        private readonly HortIntelligentDbContext _context;
+        private readonly HortIntelligentDbContext context;
         private readonly IMapper mapper;
 
         public VegetalRepository(HortIntelligentDbContext context, IMapper mapper)
         {
-            this._context = context;
+            this.context = context;
             this.mapper = mapper;
         }
 
         public async Task<bool> Delete(int id)
         {
-            var vegetal = await _context.Vegetals.FindAsync(id);
+            var vegetal = await context.Vegetals.FindAsync(id);
             if (vegetal != null)
             {
-                _context.Vegetals.Remove(vegetal);
-                await _context.SaveChangesAsync();
-                return await Task.FromResult(true);
+                try
+                {
+                    context.Vegetals.Remove(vegetal);
+                    await context.SaveChangesAsync();
+                    return await Task.FromResult(true);
+                }
+                catch (Exception ex)
+                {
+                    return await Task.FromResult(false);
+                }
             }
             else
             {
@@ -36,28 +43,32 @@ namespace HortIntelligentApi.Dades.Repositoris.Implementacions
 
         public async Task<VegetalDto> Get(int id)
         {
-            return mapper.Map<VegetalDto>(await _context.Vegetals.FindAsync(id));
+            return mapper.Map<VegetalDto>(await context.Vegetals.FindAsync(id));
         }
 
         public async Task<IList<VegetalDto>> GetAll()
         {
-            return await mapper.ProjectTo<VegetalDto>(_context.Vegetals).ToListAsync();
+            return await mapper.ProjectTo<VegetalDto>(context.Vegetals).ToListAsync();
         }
 
         public async Task<VegetalDto> Post(VegetalDto vegetal)
         {
             Vegetal vegetalAInsertar = VegetalFactory.CrearVegetal(vegetal);
-            await _context.Vegetals.AddAsync(vegetalAInsertar);
-            await _context.SaveChangesAsync();
+            await context.Vegetals.AddAsync(vegetalAInsertar);
+            await context.SaveChangesAsync();
             return await Task.FromResult(mapper.Map<VegetalDto>(vegetalAInsertar));
         }
 
         public async Task<VegetalDto> Put(VegetalDto vegetal)
         {
-            Vegetal vegetalAEditar = await _context.Vegetals.FindAsync(vegetal.Id);
+            Vegetal vegetalAEditar = await context.Vegetals.FindAsync(vegetal.Id);
+            if (vegetalAEditar == null)
+            {
+                return null;
+            }
             vegetalAEditar.Actualitzar(vegetal);
-            _context.Vegetals.Update(vegetalAEditar);
-            await _context.SaveChangesAsync();
+            context.Vegetals.Update(vegetalAEditar);
+            await context.SaveChangesAsync();
             return await Task.FromResult(mapper.Map<VegetalDto>(vegetalAEditar));
         }
     }
