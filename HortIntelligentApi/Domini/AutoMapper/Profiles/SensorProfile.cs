@@ -10,6 +10,8 @@ namespace HortIntelligentApi.Domini.AutoMapper.Profiles
         {
             CreateMap<Sensor, SensorDto>()
                ;
+            CreateMap<SensorDto, Sensor>()
+                ;
         }
     }
 }
