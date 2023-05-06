@@ -1,7 +1,7 @@
 using AutoMapper;
-using HortIntelligentApi.Dades.EntityFramework;
-using HortIntelligentApi.Dades.Repositoris.Implementacions;
-using HortIntelligentApi.Dades.Repositoris.Interficies;
+using HortIntelligent.Dades.EntityFramework;
+using HortIntelligent.Dades.Repositoris.Implementacions;
+using HortIntelligent.Dades.Repositoris.Interficies;
 using HortIntelligentApi.Domini.AutoMapper;
 using HortIntelligentApi.Domini.Implementacions;
 using HortIntelligentApi.Domini.Interficies;

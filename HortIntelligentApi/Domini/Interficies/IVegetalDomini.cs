@@ -1,5 +1,4 @@
 ﻿using HortIntelligentApi.Application.Dtos;
-using HortIntelligentApi.Domini.Entitats;
 
 namespace HortIntelligentApi.Domini.Interficies
 {
