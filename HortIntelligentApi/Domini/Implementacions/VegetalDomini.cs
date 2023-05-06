@@ -62,5 +62,10 @@ namespace HortIntelligentApi.Domini.Implementacions
             int saveResult = await VegetalRepository.SaveAsync();
             return await Task.FromResult(mapper.Map<VegetalDto>(vegetal));
         }
+
+        public async Task<bool> Exists(int vegetalId)
+        {
+            return await VegetalRepository.ExitsAsync(vegetalId);
+        }
     }
 }

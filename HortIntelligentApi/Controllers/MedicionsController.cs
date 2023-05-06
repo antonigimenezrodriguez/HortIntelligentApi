@@ -1,4 +1,5 @@
-﻿using HortIntelligentApi.Application.Dtos;
+﻿using HortIntelligent.Dades.Entitats;
+using HortIntelligentApi.Application.Dtos;
 using HortIntelligentApi.Domini.Interficies;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,9 +24,10 @@ namespace HortIntelligentApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IList<MedicioDto>> Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IList<MedicioDto>>> Get()
         {
-            return await MedicioDomini.GetAll();
+            return Ok(await MedicioDomini.GetAll());
         }
 
         /// <summary>
@@ -34,9 +36,15 @@ namespace HortIntelligentApi.Controllers
         /// <param name="id">ID de la medició</param>
         /// <returns></returns>
         [HttpGet("id")]
-        public async Task<MedicioDto> Get(int id)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<MedicioDto>> Get(int id)
         {
-            return await MedicioDomini.Get(id);
+            var medicio = await MedicioDomini.Get(id);
+            if (medicio == null)
+                return NotFound($"No s'ha trobat una medició amb ID: {id}");
+            else
+                return Ok(medicio);
         }
 
         /// <summary>
@@ -45,9 +53,14 @@ namespace HortIntelligentApi.Controllers
         /// <param name="campId">ID del camp</param>
         /// <returns></returns>
         [HttpGet("GetByCampId/campId")]
-        public async Task<IList<MedicioDto>> GetByCampId(int campId)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IList<MedicioDto>>> GetByCampId(int campId)
         {
-            return await MedicioDomini.GetByCampId(campId);
+            var existeixCamp = await MedicioDomini.ExisteixCamp(campId);
+            if (!existeixCamp)
+                return NotFound($"No existeix un camp amb ID: {campId}");
+            return Ok(await MedicioDomini.GetByCampId(campId));
         }
 
         /// <summary>
@@ -56,9 +69,14 @@ namespace HortIntelligentApi.Controllers
         /// <param name="vegetalId">ID del vegetal</param>
         /// <returns></returns>
         [HttpGet("GetByVegetalId/vegetalId")]
-        public async Task<IList<MedicioDto>> GetByVegetalId(int vegetalId)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IList<MedicioDto>>> GetByVegetalId(int vegetalId)
         {
-            return await MedicioDomini.GetByVegetalId(vegetalId);
+            var existeixVegetal = await MedicioDomini.ExisteixVegetal(vegetalId);
+            if (!existeixVegetal)
+                return NotFound($"No existeix un vegetal amb ID: {vegetalId}");
+            return Ok(await MedicioDomini.GetByVegetalId(vegetalId));
         }
 
         /// <summary>
@@ -67,9 +85,14 @@ namespace HortIntelligentApi.Controllers
         /// <param name="sensorId">ID del sensor</param>
         /// <returns></returns>
         [HttpGet("GetBySensorId/sensorId")]
-        public async Task<IList<MedicioDto>> GetBySensorId(int sensorId)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IList<MedicioDto>>> GetBySensorId(int sensorId)
         {
-            return await MedicioDomini.GetBySensorId(sensorId);
+            var existeixMedicio = await MedicioDomini.ExisteixSensor(sensorId);
+            if (!existeixMedicio)
+                return NotFound($"No existeix un sensor amb ID: {sensorId}");
+            return Ok(await MedicioDomini.GetBySensorId(sensorId));
         }
 
         /// <summary>
@@ -78,9 +101,18 @@ namespace HortIntelligentApi.Controllers
         /// <param name="id">ID de la medició a borrar</param>
         /// <returns></returns>
         [HttpDelete("id")]
-        public async Task<bool> Delete(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<int>> Delete(int id)
         {
-            return await MedicioDomini.Delete(id);
+            if(!await MedicioDomini.Exists(id))
+                return NotFound($"No s'ha trobat una medició amb ID: {id}");
+            var result = await MedicioDomini.Delete(id);
+            if (result)
+                return Ok(id);
+            else
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Valor no esperat al borrar la medició {id}");
         }
 
         /// <summary>
@@ -89,9 +121,13 @@ namespace HortIntelligentApi.Controllers
         /// <param name="medicioDto">Medició a afegir</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<MedicioDto> Post([FromBody] MedicioDto medicioDto)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<MedicioDto>> Post([FromBody] MedicioDto medicioDto)
         {
-            return await MedicioDomini.Post(medicioDto);
+            if (medicioDto == null)
+                return BadRequest();
+            return Ok(await MedicioDomini.Post(medicioDto));
         }
     }
 }

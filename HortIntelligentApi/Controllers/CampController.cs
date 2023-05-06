@@ -42,7 +42,7 @@ namespace HortIntelligentApi.Controllers
         {
             var camp = await CampDomini.Get(id);
             if (camp == null)
-                return NotFound();
+                return NotFound($"No s'ha trobat un camp amb ID: {id}");
             else
                 return Ok(camp);
         }
@@ -59,12 +59,12 @@ namespace HortIntelligentApi.Controllers
         public async Task<ActionResult<int>> Delete(int id)
         {
             if (!await CampDomini.Exists(id))
-                return NotFound();
+                return NotFound($"No s'ha trobat un camp amb ID: {id}");
             var result = await CampDomini.Delete(id);
             if (result)
                 return Ok(id);
             else
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Valor no esperado al borrar cliente {id}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Valor no esperat al borrar el camp {id}");
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace HortIntelligentApi.Controllers
             if (campDto == null)
                 return BadRequest();
             if (!await CampDomini.Exists(campDto.Id))
-                return NotFound();
+                return NotFound($"No s'ha trobat un camp amb ID: {campDto.Id}");
             return Ok(await CampDomini.Put(campDto));
         }
     }
