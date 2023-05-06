@@ -51,7 +51,7 @@ namespace HortIntelligentApi.Controllers
         }
 
         /// <summary>
-        /// Afegir un nou vegetal.
+        /// Afegir un nou camp.
         /// </summary>
         /// <param name="campDto">Camp a afegir</param>
         /// <returns></returns>
@@ -62,7 +62,7 @@ namespace HortIntelligentApi.Controllers
         }
 
         /// <summary>
-        /// Modificar un vegetal.
+        /// Modificar un camp.
         /// </summary>
         /// <param name="campDto">Camp a modificar</param>
         /// <returns></returns>

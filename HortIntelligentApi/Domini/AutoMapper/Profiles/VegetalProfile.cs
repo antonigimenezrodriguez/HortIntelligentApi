@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using HortIntelligent.Dades.Entitats;
 using HortIntelligentApi.Application.Dtos;
-using HortIntelligentApi.Domini.Entitats;
 
 namespace HortIntelligentApi.Domini.AutoMapper.Profiles
 {

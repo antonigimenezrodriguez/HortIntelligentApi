@@ -1,8 +1,6 @@
-﻿using HortIntelligent.Dades.Entitats;
-
-namespace HortIntelligentApi.Application.Dtos
+﻿namespace HortIntelligent.Dades.Entitats
 {
-    public class VegetalDto
+    public class Vegetal
     {
         public int Id { get; set; }
         public string Nom { get; set; }
