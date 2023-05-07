@@ -28,6 +28,7 @@ namespace HortIntelligentApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<IList<MedicioDto>>> Get()
         {
             return Ok(await MedicioDomini.GetAll());
@@ -39,8 +40,9 @@ namespace HortIntelligentApi.Controllers
         /// <param name="id">ID de la medició</param>
         /// <returns></returns>
         [HttpGet("id")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<MedicioDto>> Get(int id)
         {
             var medicio = await MedicioDomini.Get(id);
@@ -56,8 +58,9 @@ namespace HortIntelligentApi.Controllers
         /// <param name="campId">ID del camp</param>
         /// <returns></returns>
         [HttpGet("GetByCampId/campId")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IList<MedicioDto>>> GetByCampId(int campId)
         {
             var existeixCamp = await MedicioDomini.ExisteixCamp(campId);
@@ -72,8 +75,9 @@ namespace HortIntelligentApi.Controllers
         /// <param name="vegetalId">ID del vegetal</param>
         /// <returns></returns>
         [HttpGet("GetByVegetalId/vegetalId")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IList<MedicioDto>>> GetByVegetalId(int vegetalId)
         {
             var existeixVegetal = await MedicioDomini.ExisteixVegetal(vegetalId);
@@ -88,8 +92,9 @@ namespace HortIntelligentApi.Controllers
         /// <param name="sensorId">ID del sensor</param>
         /// <returns></returns>
         [HttpGet("GetBySensorId/sensorId")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IList<MedicioDto>>> GetBySensorId(int sensorId)
         {
             var existeixMedicio = await MedicioDomini.ExisteixSensor(sensorId);
@@ -105,8 +110,11 @@ namespace HortIntelligentApi.Controllers
         /// <returns></returns>
         [HttpDelete("id")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
         public async Task<ActionResult<int>> Delete(int id)
         {
             if(!await MedicioDomini.Exists(id))
@@ -125,6 +133,7 @@ namespace HortIntelligentApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<MedicioDto>> Post([FromBody] MedicioDto medicioDto)
         {
