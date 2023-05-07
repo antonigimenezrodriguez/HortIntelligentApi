@@ -1,5 +1,7 @@
 ﻿using HortIntelligentApi.Application.Dtos;
 using HortIntelligentApi.Domini.Interficies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HortIntelligentApi.Controllers
@@ -9,6 +11,7 @@ namespace HortIntelligentApi.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class SensorController : ControllerBase
     {
         public ISensorDomini SensorDomini { get; set; }
@@ -23,6 +26,8 @@ namespace HortIntelligentApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IList<SensorDto>> Get()
         {
             return await SensorDomini.GetAll();
@@ -34,6 +39,9 @@ namespace HortIntelligentApi.Controllers
         /// <param name="id">ID del sensor</param>
         /// <returns></returns>
         [HttpGet("id")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<SensorDto> Get(int id)
         {
             return await SensorDomini.Get(id);
@@ -45,6 +53,12 @@ namespace HortIntelligentApi.Controllers
         /// <param name="id">ID del sensor</param>
         /// <returns></returns>
         [HttpDelete("id")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
         public async Task<bool> Delete(int id)
         {
             return await SensorDomini.Delete(id);
@@ -56,6 +70,11 @@ namespace HortIntelligentApi.Controllers
         /// <param name="sensorDto">Sensor a afegir</param>
         /// <returns></returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
         public async Task<SensorDto> Post([FromBody] SensorDto sensorDto)
         {
             return await SensorDomini.Post(sensorDto);
@@ -67,6 +86,12 @@ namespace HortIntelligentApi.Controllers
         /// <param name="sensorDto">Sensor a borrar</param>
         /// <returns></returns>
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
         public async Task<SensorDto> Put([FromBody] SensorDto sensorDto)
         {
             return await SensorDomini.Put(sensorDto);

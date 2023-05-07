@@ -5,10 +5,15 @@ using HortIntelligent.Dades.Repositoris.Interficies;
 using HortIntelligentApi.Domini.AutoMapper;
 using HortIntelligentApi.Domini.Implementacions;
 using HortIntelligentApi.Domini.Interficies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace HortIntelligentApi
@@ -27,6 +32,18 @@ namespace HortIntelligentApi
                 });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opcions => opcions.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(builder.Configuration["ClauJWT"])),
+                    ClockSkew = TimeSpan.Zero
+                });
 
             builder.Services.AddSwaggerGen(options =>
             {
@@ -47,6 +64,28 @@ namespace HortIntelligentApi
                         Url = new Uri("https://example.com/license")
                     }*/
 
+                });
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[]{ }
+                    }
                 });
 
                 var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -73,6 +112,15 @@ namespace HortIntelligentApi
             builder.Services.AddTransient<ISensorRepository, SensorRepository>();
             builder.Services.AddTransient<IVegetalRepository, VegetalRepository>();
             builder.Services.AddAutoMapper(typeof(Program));
+
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<HortIntelligentDbContext>()
+                .AddDefaultTokenProviders();
+
+            builder.Services.AddAuthorization(opcions =>
+            {
+                opcions.AddPolicy("EsAdmin", politica => politica.RequireClaim("esAdmin"));
+            });
 
             var app = builder.Build();
 
