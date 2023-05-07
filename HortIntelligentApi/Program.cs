@@ -5,10 +5,14 @@ using HortIntelligent.Dades.Repositoris.Interficies;
 using HortIntelligentApi.Domini.AutoMapper;
 using HortIntelligentApi.Domini.Implementacions;
 using HortIntelligentApi.Domini.Interficies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace HortIntelligentApi
@@ -27,6 +31,18 @@ namespace HortIntelligentApi
                 });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opcions => opcions.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(builder.Configuration["ClauJWT"])),
+                    ClockSkew = TimeSpan.Zero
+                });
 
             builder.Services.AddSwaggerGen(options =>
             {
@@ -73,6 +89,10 @@ namespace HortIntelligentApi
             builder.Services.AddTransient<ISensorRepository, SensorRepository>();
             builder.Services.AddTransient<IVegetalRepository, VegetalRepository>();
             builder.Services.AddAutoMapper(typeof(Program));
+
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<HortIntelligentDbContext>()
+                .AddDefaultTokenProviders();
 
             var app = builder.Build();
 
