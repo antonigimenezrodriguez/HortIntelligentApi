@@ -1,4 +1,7 @@
 ﻿using HortIntelligentApi.Application.Dtos;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -49,6 +52,20 @@ namespace HortIntelligentApi.Controllers
                 return BadRequest("Login incorrecte");
         }
 
+        [HttpGet("RenovarToken")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public ActionResult<RespostaAutenticacio> Renovar()
+        {
+            var usuariClaim = HttpContext.User.Claims.Where(claim => claim.Type == "usuari").FirstOrDefault();
+            var usuari = usuariClaim.Value;
+            var credencialsUsuari = new CredencialsUsuari()
+            {
+                Usuari = usuari
+            };
+            return ConstruirToken(credencialsUsuari);
+        }
+
+
         private RespostaAutenticacio ConstruirToken(CredencialsUsuari credencials)
         {
             var claims = new List<Claim>()
@@ -59,7 +76,7 @@ namespace HortIntelligentApi.Controllers
             var clau = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["ClauJWT"]));
             var creds = new SigningCredentials(clau, SecurityAlgorithms.HmacSha256);
 
-            var expiracio = DateTime.UtcNow.AddYears(1);
+            var expiracio = DateTime.UtcNow.AddMinutes(30);
 
             var securityToken = new JwtSecurityToken(issuer: null, audience: null, claims: claims, expires: expiracio, signingCredentials: creds);
             return new RespostaAutenticacio()
