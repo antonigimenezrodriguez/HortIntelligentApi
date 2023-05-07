@@ -127,6 +127,24 @@ namespace HortIntelligentApi.Controllers
         {
             if (medicioDto == null)
                 return BadRequest();
+            var existeixCamp = await MedicioDomini.ExisteixCamp(medicioDto.CampId);
+            var existeixVegetal = await MedicioDomini.ExisteixVegetal(medicioDto.VegetalId);
+            var existeixSensor = await MedicioDomini.ExisteixSensor(medicioDto.SensorId);
+
+            string errorFK = string.Empty;
+
+            if(!existeixCamp || !existeixVegetal || !existeixSensor)
+            {
+                errorFK = "Les següent FK no existeixen: ";
+                if (!existeixCamp)
+                    errorFK += $"\r\nCamp amb id: {medicioDto.CampId}";
+                if(!existeixVegetal)
+                    errorFK += $"\r\nVegetal amb id: {medicioDto.VegetalId}";
+                if(!existeixSensor)
+                errorFK += $"\r\nSensor amb id: {medicioDto.SensorId}";
+
+                return BadRequest(errorFK);
+            }
             return Ok(await MedicioDomini.Post(medicioDto));
         }
     }
