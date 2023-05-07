@@ -1,4 +1,5 @@
 ﻿using HortIntelligent.Dades.Entitats;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace HortIntelligent.Dades.EntityFramework.Seeding
@@ -18,6 +19,35 @@ namespace HortIntelligent.Dades.EntityFramework.Seeding
 
             var camp1 = new Camp() { Id = 1, Localitzacio = "Pati Institut Montilivi", Latitud = 41.964083, Longitud = 2.8271647 };
             modelBuilder.Entity<Camp>().HasData(camp1);
+
+            var antoni = new IdentityUser()
+            {
+                Id = "ad8d1fe9-6cf3-4479-b6e3-4047210f8b19",
+                UserName = "antoni",
+                NormalizedUserName = "ANTONI",
+                Email = null,
+                NormalizedEmail = null,
+                EmailConfirmed = false,
+                PasswordHash = "AQAAAAEAACcQAAAAEMOihM9h37Bi1O/SNkLhqtwW50DJ6ejyPmX1vqSAWbmSVOBoSIYCXWAqI6y8mFqfXA==",
+                SecurityStamp = "OS32HZAWWAY4HWPKN2A5W2XCO5UVATRC",
+                ConcurrencyStamp = "737bf3c7-c034-402f-81d3-553967e9f2bf",
+                PhoneNumber = null,
+                PhoneNumberConfirmed = false,
+                TwoFactorEnabled = false,
+                LockoutEnd = null,
+                LockoutEnabled = true,
+                AccessFailedCount = 0
+            };
+            modelBuilder.Entity<IdentityUser>().HasData(antoni);
+
+            var antoniAdminClaim = new IdentityUserClaim<string>()
+            {
+                Id = 1,
+                UserId = "ad8d1fe9-6cf3-4479-b6e3-4047210f8b19",
+                ClaimType = "esAdmin",
+                ClaimValue = "true"
+            };
+            modelBuilder.Entity<IdentityUserClaim<string>>().HasData(antoniAdminClaim);
         }
     }
 }

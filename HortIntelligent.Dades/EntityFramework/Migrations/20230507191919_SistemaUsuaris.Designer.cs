@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HortIntelligentApi.Migrations
 {
     [DbContext(typeof(HortIntelligentDbContext))]
-    [Migration("20230507110553_SistemaUsuarios")]
-    partial class SistemaUsuarios
+    [Migration("20230507191919_SistemaUsuaris")]
+    partial class SistemaUsuaris
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -352,6 +352,22 @@ namespace HortIntelligentApi.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "ad8d1fe9-6cf3-4479-b6e3-4047210f8b19",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "737bf3c7-c034-402f-81d3-553967e9f2bf",
+                            EmailConfirmed = false,
+                            LockoutEnabled = true,
+                            NormalizedUserName = "ANTONI",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMOihM9h37Bi1O/SNkLhqtwW50DJ6ejyPmX1vqSAWbmSVOBoSIYCXWAqI6y8mFqfXA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "OS32HZAWWAY4HWPKN2A5W2XCO5UVATRC",
+                            TwoFactorEnabled = false,
+                            UserName = "antoni"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -377,6 +393,15 @@ namespace HortIntelligentApi.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AspNetUserClaims", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ClaimType = "esAdmin",
+                            ClaimValue = "true",
+                            UserId = "ad8d1fe9-6cf3-4479-b6e3-4047210f8b19"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>

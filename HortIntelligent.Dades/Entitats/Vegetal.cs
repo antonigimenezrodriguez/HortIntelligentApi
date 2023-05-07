@@ -1,6 +1,9 @@
-﻿namespace HortIntelligent.Dades.Entitats
+﻿using HortIntelligent.Dades.Herlper;
+using System.ComponentModel;
+
+namespace HortIntelligent.Dades.Entitats
 {
-    public class Vegetal
+    public class Vegetal : ISoftDelete
     {
         public int Id { get; set; }
         public string Nom { get; set; }
@@ -12,6 +15,9 @@
         public decimal? HumitatMaxima { get; set; }
         public decimal? HumitatMinima { get; set; }
         public decimal? HumitatOptima { get; set; }
+
+        [DefaultValue(false)]
+        public bool IsDeleted { get; set; }
 
         public HashSet<Medicio> Medicions { get; set; }
         public HashSet<Camp> Camps { get; set; }

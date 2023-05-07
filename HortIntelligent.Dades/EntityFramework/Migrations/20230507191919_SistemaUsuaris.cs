@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HortIntelligentApi.Migrations
 {
-    public partial class SistemaUsuarios : Migration
+    public partial class SistemaUsuaris : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -153,6 +153,16 @@ namespace HortIntelligentApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "ad8d1fe9-6cf3-4479-b6e3-4047210f8b19", 0, "737bf3c7-c034-402f-81d3-553967e9f2bf", null, false, true, null, null, "ANTONI", "AQAAAAEAACcQAAAAEMOihM9h37Bi1O/SNkLhqtwW50DJ6ejyPmX1vqSAWbmSVOBoSIYCXWAqI6y8mFqfXA==", null, false, "OS32HZAWWAY4HWPKN2A5W2XCO5UVATRC", false, "antoni" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserClaims",
+                columns: new[] { "Id", "ClaimType", "ClaimValue", "UserId" },
+                values: new object[] { 1, "esAdmin", "true", "ad8d1fe9-6cf3-4479-b6e3-4047210f8b19" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

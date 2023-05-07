@@ -1,7 +1,10 @@
 ﻿using HortIntelligent.Dades.Entitats;
 using HortIntelligent.Dades.EntityFramework.Seeding;
+using HortIntelligent.Dades.Herlper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace HortIntelligent.Dades.EntityFramework
@@ -11,7 +14,6 @@ namespace HortIntelligent.Dades.EntityFramework
     {
         public HortIntelligentDbContext(DbContextOptions options) : base(options)
         {
-
         }
 
         public DbSet<Camp> Camps { get; set; }
@@ -19,11 +21,28 @@ namespace HortIntelligent.Dades.EntityFramework
         public DbSet<Sensor> Sensors { get; set; }
         public DbSet<Vegetal> Vegetals { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            //modelBuilder.Entity<Sensor>().HasQueryFilter(p => !p.IsDeleted);
+
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                if (!typeof(ISoftDelete).IsAssignableFrom(entityType.ClrType))
+                {
+                    continue;
+                }
+
+                var param = Expression.Parameter(entityType.ClrType, "entity");
+                var prop = Expression.PropertyOrField(param, nameof(ISoftDelete.IsDeleted));
+                var entityNotDeleted = Expression.Lambda(Expression.Equal(prop, Expression.Constant(false)), param);
+
+                entityType.SetQueryFilter(entityNotDeleted);
+            }
+
 
             SeedingHort.Seed(modelBuilder);
         }

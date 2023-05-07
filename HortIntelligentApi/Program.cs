@@ -111,6 +111,9 @@ namespace HortIntelligentApi
             builder.Services.AddTransient<IMedicioRepository, MedicioRepository>();
             builder.Services.AddTransient<ISensorRepository, SensorRepository>();
             builder.Services.AddTransient<IVegetalRepository, VegetalRepository>();
+
+            builder.Services.AddResponseCaching();
+
             builder.Services.AddAutoMapper(typeof(Program));
 
             builder.Services.AddIdentity<IdentityUser, IdentityRole>()
@@ -134,6 +137,8 @@ namespace HortIntelligentApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseResponseCaching();
 
             app.UseAuthorization();
 
