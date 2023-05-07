@@ -117,6 +117,11 @@ namespace HortIntelligentApi
                 .AddEntityFrameworkStores<HortIntelligentDbContext>()
                 .AddDefaultTokenProviders();
 
+            builder.Services.AddAuthorization(opcions =>
+            {
+                opcions.AddPolicy("EsAdmin", politica => politica.RequireClaim("esAdmin"));
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
