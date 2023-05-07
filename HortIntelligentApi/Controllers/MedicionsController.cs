@@ -1,6 +1,8 @@
 ﻿using HortIntelligent.Dades.Entitats;
 using HortIntelligentApi.Application.Dtos;
 using HortIntelligentApi.Domini.Interficies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HortIntelligentApi.Controllers
@@ -10,6 +12,7 @@ namespace HortIntelligentApi.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class MedicionsController : ControllerBase
     {
         public IMedicioDomini MedicioDomini { get; set; }
