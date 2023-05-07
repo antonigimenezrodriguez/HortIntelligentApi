@@ -62,5 +62,10 @@ namespace HortIntelligentApi.Domini.Implementacions
             int saveResult = await SensorRepository.SaveAsync();
             return await Task.FromResult(mapper.Map<SensorDto>(sensor));
         }
+
+        public async Task<bool> Exists(int sensorId)
+        {
+            return await SensorRepository.ExitsAsync(sensorId);
+        }
     }
 }

@@ -10,13 +10,19 @@ namespace HortIntelligentApi.Domini.Implementacions
     public class MedicioDomini : IMedicioDomini
     {
         public IMedicioRepository MedicioRepository { get; set; }
+        public IVegetalDomini VegetalDomini { get; set; }
+        public ISensorDomini SensorDomini { get; set; }
+        public ICampDomini CampDomini { get; set; }
         private readonly IMapper mapper;
 
 
-        public MedicioDomini(IMedicioRepository medicioRepository, IMapper mapper)
+        public MedicioDomini(IMedicioRepository medicioRepository, IMapper mapper, ICampDomini campDomini, IVegetalDomini vegetalDomini, ISensorDomini sensorDomini)
         {
             MedicioRepository = medicioRepository;
             this.mapper = mapper;
+            CampDomini = campDomini;
+            VegetalDomini = vegetalDomini;
+            SensorDomini = sensorDomini;
         }
 
         public async Task<IList<MedicioDto>> GetAll()
@@ -69,6 +75,26 @@ namespace HortIntelligentApi.Domini.Implementacions
             await MedicioRepository.AddAsync(sensor);
             int saveResult = await MedicioRepository.SaveAsync();
             return await Task.FromResult(mapper.Map<MedicioDto>(sensor));
+        }
+
+        public async Task<bool> ExisteixCamp(int campId)
+        {
+            return await CampDomini.Exists(campId);
+        }
+
+        public async Task<bool> ExisteixVegetal(int vegetalId)
+        {
+            return await VegetalDomini.Exists(vegetalId);
+        }
+
+        public async Task<bool> ExisteixSensor(int sensorId)
+        {
+            return await SensorDomini.Exists(sensorId);
+        }
+
+        public async Task<bool> Exists(int id)
+        {
+            return await MedicioRepository.ExitsAsync(id);
         }
     }
 }

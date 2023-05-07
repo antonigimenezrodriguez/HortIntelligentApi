@@ -11,5 +11,9 @@ namespace HortIntelligentApi.Domini.Interficies
         public Task<IList<MedicioDto>> GetBySensorId(int sensorId);
         public Task<bool> Delete(int id);
         public Task<MedicioDto> Post(MedicioDto medicioDto);
+        public Task<bool> ExisteixCamp(int campId);
+        public Task<bool> ExisteixVegetal(int vegetalId);
+        public Task<bool> ExisteixSensor(int sensorId);
+        public Task<bool> Exists(int id);
     }
 }

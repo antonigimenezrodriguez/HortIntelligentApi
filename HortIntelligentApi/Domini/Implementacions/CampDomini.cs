@@ -56,5 +56,10 @@ namespace HortIntelligentApi.Domini.Implementacions
             await CampRepository.SaveAsync();
             return mapper.Map<CampDto>(campAModificar);
         }
+
+        public async Task<bool> Exists(int id)
+        {
+            return await CampRepository.ExitsAsync(id);
+        }
     }
 }

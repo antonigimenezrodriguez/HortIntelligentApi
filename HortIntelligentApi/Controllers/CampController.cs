@@ -23,10 +23,12 @@ namespace HortIntelligentApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IList<CampDto>> Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IList<CampDto>>> Get()
         {
-            return await CampDomini.GetAll();
+            return Ok(await CampDomini.GetAll());
         }
+
 
         /// <summary>
         /// Obtenir un camp segons el seu ID.
@@ -34,9 +36,15 @@ namespace HortIntelligentApi.Controllers
         /// <param name="id">ID del camp</param>
         /// <returns></returns>
         [HttpGet("id")]
-        public async Task<CampDto> Get(int id)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<CampDto>> Get(int id)
         {
-            return await CampDomini.Get(id);
+            var camp = await CampDomini.Get(id);
+            if (camp == null)
+                return NotFound($"No s'ha trobat un camp amb ID: {id}");
+            else
+                return Ok(camp);
         }
 
         /// <summary>
@@ -45,9 +53,18 @@ namespace HortIntelligentApi.Controllers
         /// <param name="id">ID del camp</param>
         /// <returns></returns>
         [HttpDelete("id")]
-        public async Task<bool> Delete(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<int>> Delete(int id)
         {
-            return await CampDomini.Delete(id);
+            if (!await CampDomini.Exists(id))
+                return NotFound($"No s'ha trobat un camp amb ID: {id}");
+            var result = await CampDomini.Delete(id);
+            if (result)
+                return Ok(id);
+            else
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Valor no esperat al borrar el camp {id}");
         }
 
         /// <summary>
@@ -56,9 +73,13 @@ namespace HortIntelligentApi.Controllers
         /// <param name="campDto">Camp a afegir</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<CampDto> Post([FromBody] CampDto campDto)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<CampDto>> Post([FromBody] CampDto campDto)
         {
-            return await CampDomini.Post(campDto);
+            if (campDto == null)
+                return BadRequest();
+            return Ok(await CampDomini.Post(campDto));
         }
 
         /// <summary>
@@ -67,9 +88,16 @@ namespace HortIntelligentApi.Controllers
         /// <param name="campDto">Camp a modificar</param>
         /// <returns></returns>
         [HttpPut()]
-        public async Task<CampDto> Put([FromBody] CampDto campDto)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<CampDto>> Put([FromBody] CampDto campDto)
         {
-            return await CampDomini.Put(campDto);
+            if (campDto == null)
+                return BadRequest();
+            if (!await CampDomini.Exists(campDto.Id))
+                return NotFound($"No s'ha trobat un camp amb ID: {campDto.Id}");
+            return Ok(await CampDomini.Put(campDto));
         }
     }
 }

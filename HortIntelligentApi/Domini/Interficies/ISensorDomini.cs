@@ -9,5 +9,6 @@ namespace HortIntelligentApi.Domini.Interficies
         public Task<bool> Delete(int id);
         public Task<SensorDto> Post(SensorDto sensorDto);
         public Task<SensorDto> Put(SensorDto sensorDto);
+        public Task<bool> Exists(int sensorId);
     }
 }
