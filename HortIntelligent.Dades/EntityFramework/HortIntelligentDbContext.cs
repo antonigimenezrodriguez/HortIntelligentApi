@@ -1,12 +1,13 @@
 ﻿using HortIntelligent.Dades.Entitats;
 using HortIntelligent.Dades.EntityFramework.Seeding;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace HortIntelligent.Dades.EntityFramework
 {
 #pragma warning disable CS1591
-    public class HortIntelligentDbContext : DbContext
+    public class HortIntelligentDbContext : IdentityDbContext
     {
         public HortIntelligentDbContext(DbContextOptions options) : base(options)
         {
