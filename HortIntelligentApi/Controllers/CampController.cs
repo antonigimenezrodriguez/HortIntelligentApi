@@ -30,7 +30,15 @@ namespace HortIntelligentApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<IList<CampDto>>> Get()
         {
-            return Ok(await CampDomini.GetAll());
+            var result = await CampDomini.GetAll();
+            if (result.Error)
+            {
+                return StatusCode(result.StatusCode, result.ToString());
+            }
+            else
+            {
+                return Ok(result.Data);
+            }
         }
 
 
@@ -45,11 +53,15 @@ namespace HortIntelligentApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CampDto>> Get(int id)
         {
-            var camp = await CampDomini.Get(id);
-            if (camp == null)
-                return NotFound($"No s'ha trobat un camp amb ID: {id}");
+            var result = await CampDomini.Get(id);
+            if (result.Error)
+            {
+                return StatusCode(result.StatusCode, result.ToString());
+            }
             else
-                return Ok(camp);
+            {
+                return Ok(result.Data);
+            }
         }
 
         /// <summary>
@@ -66,13 +78,11 @@ namespace HortIntelligentApi.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
         public async Task<ActionResult<int>> Delete(int id)
         {
-            if (!await CampDomini.Exists(id))
-                return NotFound($"No s'ha trobat un camp amb ID: {id}");
             var result = await CampDomini.Delete(id);
-            if (result)
+            if (!result.Error)
                 return Ok(id);
             else
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Valor no esperat al borrar el camp {id}");
+                return StatusCode(result.StatusCode, result.ToString());
         }
 
         /// <summary>
@@ -83,14 +93,19 @@ namespace HortIntelligentApi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
         public async Task<ActionResult<CampDto>> Post([FromBody] CampDto campDto)
         {
             if (campDto == null)
                 return BadRequest();
-            return Ok(await CampDomini.Post(campDto));
+            ResultDto<CampDto> resultat = await CampDomini.Post(campDto);
+            if (resultat.Error)
+                return StatusCode(resultat.StatusCode, resultat.ToString());
+            else
+                return Ok(resultat.Data);
         }
 
         /// <summary>
@@ -109,9 +124,11 @@ namespace HortIntelligentApi.Controllers
         {
             if (campDto == null)
                 return BadRequest();
-            if (!await CampDomini.Exists(campDto.Id))
-                return NotFound($"No s'ha trobat un camp amb ID: {campDto.Id}");
-            return Ok(await CampDomini.Put(campDto));
+            ResultDto<CampDto> resultat = await CampDomini.Put(campDto);
+            if (resultat.Error)
+                return StatusCode(resultat.StatusCode, resultat.ToString());
+            else
+                return Ok(resultat.Data);
         }
     }
 }
