@@ -18,54 +18,144 @@ namespace HortIntelligentApi.Domini.Implementacions
             this.mapper = mapper;
         }
 
-        public async Task<IList<SensorDto>> GetAll()
+        public async Task<ResultDto<IList<SensorDto>>> GetAll()
         {
-            return mapper.Map<IList<SensorDto>>(await SensorRepository.GetAllAsync());
-        }
-
-        public async Task<SensorDto> Get(int id)
-        {
-            return mapper.Map<SensorDto>(await SensorRepository.GetAsync(id));
-        }
-
-        public async Task<bool> Delete(int id)
-        {
-            var exists = await SensorRepository.ExitsAsync(id);
-            if (!exists)
+            ResultDto<IList<SensorDto>> result = new ResultDto<IList<SensorDto>>();
+            try
             {
-                return await Task.FromResult(false);
+                var llistat = await SensorRepository.GetAllAsync();
+                result.StatusCode = StatusCodes.Status200OK;
+                result.Data = mapper.Map<List<SensorDto>>(llistat);
+                return await Task.FromResult(result);
             }
-            else
+            catch (Exception ex)
+            {
+                result.StatusCode = StatusCodes.Status500InternalServerError;
+                result.Errors.Add(ex.Message);
+                return await Task.FromResult(result);
+            }
+        }
+
+        public async Task<ResultDto<SensorDto>> Get(int id)
+        {
+            ResultDto<SensorDto> result = new ResultDto<SensorDto>();
+            try
+            {
+                var sensor = await SensorRepository.GetAsync(id);
+                if (sensor == null)
+                {
+                    result.StatusCode = StatusCodes.Status404NotFound;
+                    result.Errors.Add($"No existeix un sensor amb id: {id}");
+                    return await Task.FromResult(result);
+                }
+                else
+                {
+                    result.StatusCode = StatusCodes.Status200OK;
+                    result.Data = mapper.Map<SensorDto>(await SensorRepository.GetAsync(id));
+                    return await Task.FromResult(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = StatusCodes.Status500InternalServerError;
+                result.Errors.Add(ex.Message);
+                return await Task.FromResult(result);
+            }
+        }
+
+        public async Task<ResultDto<int>> Delete(int id)
+        {
+            ResultDto<int> resultDto = new ResultDto<int>();
+            if (!await SensorRepository.ExitsAsync(id))
+            {
+                resultDto.StatusCode = StatusCodes.Status404NotFound;
+                resultDto.Errors.Add($"No s'ha trobat un sensor amb ID: {id}");
+                return resultDto;
+            }
+            try
             {
                 await SensorRepository.DeleteAsync(id);
-                int saveResult = await SensorRepository.SaveAsync();
-                if (saveResult > 0)
-                    return await Task.FromResult(true);
+                await SensorRepository.SaveAsync();
+                if (await SensorRepository.ExitsAsync(id))
+                {
+                    resultDto.StatusCode = StatusCodes.Status500InternalServerError;
+                    resultDto.Errors.Add($"Valor no esperat al borrar sensor: {id}");
+                    return await Task.FromResult(resultDto);
+                }
                 else
-                    return await Task.FromResult(false);
-
+                {
+                    resultDto.Data = id;
+                    resultDto.StatusCode = StatusCodes.Status200OK;
+                    return await Task.FromResult(resultDto);
+                }
+            }
+            catch (Exception ex)
+            {
+                resultDto.Errors.Add(ex.Message);
+                resultDto.StatusCode = StatusCodes.Status500InternalServerError;
+                return await Task.FromResult(resultDto);
             }
         }
 
-        public async Task<SensorDto> Post(SensorDto sensorDto)
+        public async Task<ResultDto<SensorDto>> Post(SensorDto sensorDto)
         {
-            var sensor = mapper.Map<Sensor>(sensorDto);
-            await SensorRepository.AddAsync(sensor);
-            int saveResult = await SensorRepository.SaveAsync();
-            return await Task.FromResult(mapper.Map<SensorDto>(sensor));
+            ResultDto<SensorDto> resultDto = await CheckFKs(sensorDto);
+            if (resultDto.Error)
+            {
+                return await Task.FromResult(resultDto);
+            }
+            try
+            {
+                var SensorAInsertar = mapper.Map<Sensor>(sensorDto);
+                await SensorRepository.AddAsync(SensorAInsertar);
+                await SensorRepository.SaveAsync();
+                resultDto.Data = mapper.Map<SensorDto>(SensorAInsertar);
+                return await Task.FromResult(resultDto);
+            }
+            catch (Exception ex)
+            {
+                resultDto.Errors.Add(ex.Message);
+                resultDto.StatusCode = StatusCodes.Status500InternalServerError;
+                return await Task.FromResult(resultDto);
+            }
         }
 
-        public async Task<SensorDto> Put(SensorDto sensorDto)
+        public async Task<ResultDto<SensorDto>> Put(SensorDto sensorDto)
         {
-            var sensor = mapper.Map<Sensor>(sensorDto);
-            await SensorRepository.UpdateAsync(sensor);
-            int saveResult = await SensorRepository.SaveAsync();
-            return await Task.FromResult(mapper.Map<SensorDto>(sensor));
+            ResultDto<SensorDto> resultDto = await CheckFKs(sensorDto);
+            if (resultDto.Error)
+            {
+                return await Task.FromResult(resultDto);
+            }
+            if (!await Exists(sensorDto.Id))
+            {
+                resultDto.StatusCode = StatusCodes.Status404NotFound;
+                resultDto.Errors.Add($"No existeix el sensor {sensorDto.Id}");
+                return await Task.FromResult(resultDto);
+            }
+            try
+            {
+                var SensorAInsertar = mapper.Map<Sensor>(sensorDto);
+                await SensorRepository.UpdateAsync(SensorAInsertar);
+                await SensorRepository.SaveAsync();
+                resultDto.Data = mapper.Map<SensorDto>(SensorAInsertar);
+            }
+            catch (Exception ex)
+            {
+                resultDto.Errors.Add(ex.Message);
+                resultDto.StatusCode = StatusCodes.Status500InternalServerError;
+            }
+            return await Task.FromResult(resultDto);
         }
 
         public async Task<bool> Exists(int sensorId)
         {
             return await SensorRepository.ExitsAsync(sensorId);
+        }
+
+        private async Task<ResultDto<SensorDto>> CheckFKs(SensorDto sensorDto)
+        {
+            return await Task.FromResult(new ResultDto<SensorDto>());
         }
     }
 }

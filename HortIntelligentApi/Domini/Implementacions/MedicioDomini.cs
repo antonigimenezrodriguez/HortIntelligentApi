@@ -25,56 +25,181 @@ namespace HortIntelligentApi.Domini.Implementacions
             SensorDomini = sensorDomini;
         }
 
-        public async Task<IList<MedicioDto>> GetAll()
+        public async Task<ResultDto<IList<MedicioDto>>> GetAll()
         {
-            return mapper.Map<IList<MedicioDto>>(await MedicioRepository.GetAllAsync());
-        }
-
-        public async Task<MedicioDto> Get(int id)
-        {
-            return mapper.Map<MedicioDto>(await MedicioRepository.GetAsync(id));
-        }
-
-        public async Task<IList<MedicioDto>> GetByCampId(int campId)
-        {
-            return mapper.Map<IList<MedicioDto>>(await MedicioRepository.GetByCampIdAsync(campId));
-        }
-
-        public async Task<IList<MedicioDto>> GetByVegetalId(int vegetalId)
-        {
-            return mapper.Map<IList<MedicioDto>>(await MedicioRepository.GetByVegetalIdAsync(vegetalId));
-        }
-
-        public async Task<IList<MedicioDto>> GetBySensorId(int sensorId)
-        {
-            return mapper.Map<IList<MedicioDto>>(await MedicioRepository.GetBySensorId(sensorId));
-        }
-
-        public async Task<bool> Delete(int id)
-        {
-            var exists = await MedicioRepository.ExitsAsync(id);
-            if (!exists)
+            ResultDto<IList<MedicioDto>> result = new ResultDto<IList<MedicioDto>>();
+            try
             {
-                return await Task.FromResult(false);
+                var llistat = await MedicioRepository.GetAllAsync();
+                result.StatusCode = StatusCodes.Status200OK;
+                result.Data = mapper.Map<List<MedicioDto>>(llistat);
+                return await Task.FromResult(result);
             }
-            else
+            catch (Exception ex)
+            {
+                result.StatusCode = StatusCodes.Status500InternalServerError;
+                result.Errors.Add(ex.Message);
+                return await Task.FromResult(result);
+            }
+        }
+
+        public async Task<ResultDto<MedicioDto>> Get(int id)
+        {
+            ResultDto<MedicioDto> result = new ResultDto<MedicioDto>();
+            try
+            {
+                var medicio = await MedicioRepository.GetAsync(id);
+                if (medicio == null)
+                {
+                    result.StatusCode = StatusCodes.Status404NotFound;
+                    result.Errors.Add($"No existeix una medició amb id: {id}");
+                    return await Task.FromResult(result);
+                }
+                else
+                {
+                    result.StatusCode = StatusCodes.Status200OK;
+                    result.Data = mapper.Map<MedicioDto>(await MedicioRepository.GetAsync(id));
+                    return await Task.FromResult(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = StatusCodes.Status500InternalServerError;
+                result.Errors.Add(ex.Message);
+                return await Task.FromResult(result);
+            }
+        }
+
+        public async Task<ResultDto<IList<MedicioDto>>> GetByCampId(int campId)
+        {
+            ResultDto<IList<MedicioDto>> result = new ResultDto<IList<MedicioDto>>();
+            var existeixCamp = await ExisteixCamp(campId);
+            if (!existeixCamp)
+            {
+                result.StatusCode = StatusCodes.Status400BadRequest;
+                result.Errors.Add($"No Existeix un camp amb id: {campId}");
+                return await Task.FromResult(result);
+            }
+            try
+            {
+                var llistat = await MedicioRepository.GetByCampIdAsync(campId);
+                result.StatusCode = StatusCodes.Status200OK;
+                result.Data = mapper.Map<List<MedicioDto>>(llistat);
+                return await Task.FromResult(result);
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = StatusCodes.Status500InternalServerError;
+                result.Errors.Add(ex.Message);
+                return await Task.FromResult(result);
+            }
+        }
+
+        public async Task<ResultDto<IList<MedicioDto>>> GetByVegetalId(int vegetalId)
+        {
+            ResultDto<IList<MedicioDto>> result = new ResultDto<IList<MedicioDto>>();
+            var existeixCamp = await ExisteixVegetal(vegetalId);
+            if (!existeixCamp)
+            {
+                result.StatusCode = StatusCodes.Status400BadRequest;
+                result.Errors.Add($"No Existeix un vegetal amb id: {vegetalId}");
+                return await Task.FromResult(result);
+            }
+            try
+            {
+                var llistat = await MedicioRepository.GetByVegetalIdAsync(vegetalId);
+                result.StatusCode = StatusCodes.Status200OK;
+                result.Data = mapper.Map<List<MedicioDto>>(llistat);
+                return await Task.FromResult(result);
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = StatusCodes.Status500InternalServerError;
+                result.Errors.Add(ex.Message);
+                return await Task.FromResult(result);
+            }
+        }
+
+        public async Task<ResultDto<IList<MedicioDto>>> GetBySensorId(int sensorId)
+        {
+            ResultDto<IList<MedicioDto>> result = new ResultDto<IList<MedicioDto>>();
+            var existeixCamp = await ExisteixSensor(sensorId);
+            if (!existeixCamp)
+            {
+                result.StatusCode = StatusCodes.Status400BadRequest;
+                result.Errors.Add($"No Existeix un sensor amb id: {sensorId}");
+                return await Task.FromResult(result);
+            }
+            try
+            {
+                var llistat = await MedicioRepository.GetBySensorIdAsync(sensorId);
+                result.StatusCode = StatusCodes.Status200OK;
+                result.Data = mapper.Map<List<MedicioDto>>(llistat);
+                return await Task.FromResult(result);
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = StatusCodes.Status500InternalServerError;
+                result.Errors.Add(ex.Message);
+                return await Task.FromResult(result);
+            }
+        }
+
+        public async Task<ResultDto<int>> Delete(int id)
+        {
+            ResultDto<int> resultDto = new ResultDto<int>();
+            if (!await MedicioRepository.ExitsAsync(id))
+            {
+                resultDto.StatusCode = StatusCodes.Status404NotFound;
+                resultDto.Errors.Add($"No s'ha trobat una medició amb ID: {id}");
+                return resultDto;
+            }
+            try
             {
                 await MedicioRepository.DeleteAsync(id);
-                int saveResult = await MedicioRepository.SaveAsync();
-                if (saveResult > 0)
-                    return await Task.FromResult(true);
+                await MedicioRepository.SaveAsync();
+                if (await MedicioRepository.ExitsAsync(id))
+                {
+                    resultDto.StatusCode = StatusCodes.Status500InternalServerError;
+                    resultDto.Errors.Add($"Valor no esperat al borrar medició: {id}");
+                    return await Task.FromResult(resultDto);
+                }
                 else
-                    return await Task.FromResult(false);
-
+                {
+                    resultDto.Data = id;
+                    resultDto.StatusCode = StatusCodes.Status200OK;
+                    return await Task.FromResult(resultDto);
+                }
+            }
+            catch (Exception ex)
+            {
+                resultDto.Errors.Add(ex.Message);
+                resultDto.StatusCode = StatusCodes.Status500InternalServerError;
+                return await Task.FromResult(resultDto);
             }
         }
 
-        public async Task<MedicioDto> Post(MedicioDto medicioDto)
+        public async Task<ResultDto<MedicioDto>> Post(MedicioDto medicioDto)
         {
-            var sensor = mapper.Map<Medicio>(medicioDto);
-            await MedicioRepository.AddAsync(sensor);
-            int saveResult = await MedicioRepository.SaveAsync();
-            return await Task.FromResult(mapper.Map<MedicioDto>(sensor));
+            ResultDto<MedicioDto> resultDto = await CheckFKs(medicioDto);
+            if (resultDto.Error)
+            {
+                return await Task.FromResult(resultDto);
+            }
+            try
+            {
+                var MedicioAinsertar = mapper.Map<Medicio>(medicioDto);
+                await MedicioRepository.AddAsync(MedicioAinsertar);
+                await MedicioRepository.SaveAsync();
+                resultDto.Data = mapper.Map<MedicioDto>(MedicioAinsertar);
+                return await Task.FromResult(resultDto);
+            }
+            catch (Exception ex)
+            {
+                resultDto.Errors.Add(ex.Message);
+                resultDto.StatusCode = StatusCodes.Status500InternalServerError;
+                return await Task.FromResult(resultDto);
+            }
         }
 
         public async Task<bool> ExisteixCamp(int campId)
@@ -95,6 +220,31 @@ namespace HortIntelligentApi.Domini.Implementacions
         public async Task<bool> Exists(int id)
         {
             return await MedicioRepository.ExitsAsync(id);
+        }
+
+        private async Task<ResultDto<MedicioDto>> CheckFKs(MedicioDto medicioDto)
+        {
+            ResultDto<MedicioDto> errorDto = new ResultDto<MedicioDto>();
+
+            var existeixVegetal = await ExisteixVegetal(medicioDto.VegetalId);
+            if (!existeixVegetal)
+            {
+                errorDto.StatusCode = StatusCodes.Status400BadRequest;
+                errorDto.Errors.Add($"Error FK: No Existeix un vegetal amb id: {medicioDto.VegetalId}");
+            }
+            var existeixCamp = await ExisteixCamp(medicioDto.CampId);
+            if (!existeixCamp)
+            {
+                errorDto.StatusCode = StatusCodes.Status400BadRequest;
+                errorDto.Errors.Add($"Error FK: No Existeix un camp amb id: {medicioDto.CampId}");
+            }
+            var existeixSensor = await ExisteixSensor(medicioDto.SensorId);
+            if (!existeixSensor)
+            {
+                errorDto.StatusCode = StatusCodes.Status400BadRequest;
+                errorDto.Errors.Add($"Error FK: No Existeix un sensor amb id: {medicioDto.SensorId}");
+            }
+            return await Task.FromResult(errorDto);
         }
     }
 }

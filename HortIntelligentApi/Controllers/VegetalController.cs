@@ -1,5 +1,10 @@
-﻿using HortIntelligentApi.Application.Dtos;
+﻿using AutoMapper;
+using HortIntelligent.Dades.Repositoris.Implementacions;
+using HortIntelligentApi.Application.Dtos;
+using HortIntelligentApi.Domini.Implementacions;
 using HortIntelligentApi.Domini.Interficies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HortIntelligentApi.Controllers
@@ -9,6 +14,7 @@ namespace HortIntelligentApi.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class VegetalController : ControllerBase
     {
         public IVegetalDomini VegetalDomini { get; set; }
@@ -23,9 +29,20 @@ namespace HortIntelligentApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IList<VegetalDto>> Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IList<VegetalDto>>> Get()
         {
-            return await VegetalDomini.GetAll();
+            var result = await VegetalDomini.GetAll();
+            if (result.Error)
+            {
+                return StatusCode(result.StatusCode, result.ToString());
+            }
+            else
+            {
+                return Ok(result.Data);
+            }
         }
 
         /// <summary>
@@ -34,9 +51,22 @@ namespace HortIntelligentApi.Controllers
         /// <param name="id">ID del vegetal</param>
         /// <returns></returns>
         [HttpGet("id")]
-        public async Task<VegetalDto> Get(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
+        public async Task<ActionResult<VegetalDto>> Get(int id)
         {
-            return await VegetalDomini.Get(id);
+            var result = await VegetalDomini.Get(id);
+            if (result.Error)
+            {
+                return StatusCode(result.StatusCode, result.ToString());
+            }
+            else
+            {
+                return Ok(result.Data);
+            }
         }
 
         /// <summary>
@@ -45,9 +75,19 @@ namespace HortIntelligentApi.Controllers
         /// <param name="id">ID del vegetal a borrar</param>
         /// <returns></returns>
         [HttpDelete("id")]
-        public async Task<bool> Delete(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
+        public async Task<ActionResult<int>> Delete(int id)
         {
-            return await VegetalDomini.Delete(id);
+            var result = await VegetalDomini.Delete(id);
+            if (!result.Error)
+                return Ok(id);
+            else
+                return StatusCode(result.StatusCode, result.ToString());
         }
 
         /// <summary>
@@ -56,9 +96,21 @@ namespace HortIntelligentApi.Controllers
         /// <param name="vegetal">Vegetal a afegir</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<VegetalDto> Post([FromBody] VegetalDto vegetal)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
+        public async Task<ActionResult<VegetalDto>> Post([FromBody] VegetalDto vegetal)
         {
-            return await VegetalDomini.Post(vegetal);
+            if (vegetal == null)
+                return BadRequest();
+            ResultDto<VegetalDto> resultat = await VegetalDomini.Post(vegetal);
+            if (resultat.Error)
+                return StatusCode(resultat.StatusCode, resultat.ToString());
+            else
+                return Ok(resultat.Data);
         }
 
         /// <summary>
@@ -67,9 +119,22 @@ namespace HortIntelligentApi.Controllers
         /// <param name="vegetal">Vegetal a modificar</param>
         /// <returns></returns>
         [HttpPut]
-        public async Task<VegetalDto> Put([FromBody] VegetalDto vegetal)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
+        public async Task<ActionResult<VegetalDto>> Put([FromBody] VegetalDto vegetal)
         {
-            return await VegetalDomini.Put(vegetal);
+            if (vegetal == null)
+                return BadRequest();
+            ResultDto<VegetalDto> resultat = await VegetalDomini.Put(vegetal);
+            if (resultat.Error)
+                return StatusCode(resultat.StatusCode, resultat.ToString());
+            else
+                return Ok(resultat.Data);
         }
     }
 }

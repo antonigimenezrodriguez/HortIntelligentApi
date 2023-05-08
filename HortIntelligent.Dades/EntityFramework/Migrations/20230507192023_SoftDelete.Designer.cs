@@ -4,6 +4,7 @@ using HortIntelligent.Dades.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HortIntelligentApi.Migrations
 {
     [DbContext(typeof(HortIntelligentDbContext))]
-    partial class HortIntelligentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230507192023_SoftDelete")]
+    partial class SoftDelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,37 +23,6 @@ namespace HortIntelligentApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("HortIntelligent.Dades.Entitats.ApiKey", b =>
-                {
-                    b.Property<int>("ApiKeyId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ApiKeyId"), 1L, 1);
-
-                    b.Property<DateTime>("Exipres")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("Key")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ApiKeyId");
-
-                    b.ToTable("ApiKeys");
-
-                    b.HasData(
-                        new
-                        {
-                            ApiKeyId = 1,
-                            Exipres = new DateTime(2025, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Key = new Guid("0e6b2066-9e98-4783-8c82-c3530aa8a197"),
-                            Name = "Arduinos"
-                        });
-                });
 
             modelBuilder.Entity("HortIntelligent.Dades.Entitats.Camp", b =>
                 {

@@ -6,6 +6,7 @@ Tecnologías aplicadas:
 - SoftDelete
 - Domain Driven Design (DDD)
 - Autenticación JWT
+- Autentiación ApiKey
 - Patrón repositorio con repositorios genéricos
 - Inyección de dependencias
 - AutoMapper
