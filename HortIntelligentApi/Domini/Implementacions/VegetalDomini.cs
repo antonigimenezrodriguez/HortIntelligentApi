@@ -42,8 +42,8 @@ namespace HortIntelligentApi.Domini.Implementacions
             ResultDto<VegetalDto> result = new ResultDto<VegetalDto>();
             try
             {
-                var camp = await VegetalRepository.GetAsync(id);
-                if (camp == null)
+                var vegetal = await VegetalRepository.GetAsync(id);
+                if (vegetal == null)
                 {
                     result.StatusCode = StatusCodes.Status404NotFound;
                     result.Errors.Add($"No existeix un vegetal amb id: {id}");
@@ -107,10 +107,10 @@ namespace HortIntelligentApi.Domini.Implementacions
             }
             try
             {
-                var CampAInsertar = mapper.Map<Vegetal>(vegetalDto);
-                await VegetalRepository.AddAsync(CampAInsertar);
+                var VegetalAInsertar = mapper.Map<Vegetal>(vegetalDto);
+                await VegetalRepository.AddAsync(VegetalAInsertar);
                 await VegetalRepository.SaveAsync();
-                resultDto.Data = mapper.Map<VegetalDto>(CampAInsertar);
+                resultDto.Data = mapper.Map<VegetalDto>(VegetalAInsertar);
                 return await Task.FromResult(resultDto);
             }
             catch (Exception ex)
@@ -131,7 +131,7 @@ namespace HortIntelligentApi.Domini.Implementacions
             if (!await Exists(vegetalDto.Id))
             {
                 resultDto.StatusCode = StatusCodes.Status404NotFound;
-                resultDto.Errors.Add($"No existeix el camp {vegetalDto.Id}");
+                resultDto.Errors.Add($"No existeix el vegetal {vegetalDto.Id}");
                 return await Task.FromResult(resultDto);
             }
             try

@@ -41,8 +41,8 @@ namespace HortIntelligentApi.Domini.Implementacions
             ResultDto<SensorDto> result = new ResultDto<SensorDto>();
             try
             {
-                var camp = await SensorRepository.GetAsync(id);
-                if (camp == null)
+                var sensor = await SensorRepository.GetAsync(id);
+                if (sensor == null)
                 {
                     result.StatusCode = StatusCodes.Status404NotFound;
                     result.Errors.Add($"No existeix un sensor amb id: {id}");
@@ -106,10 +106,10 @@ namespace HortIntelligentApi.Domini.Implementacions
             }
             try
             {
-                var CampAInsertar = mapper.Map<Sensor>(sensorDto);
-                await SensorRepository.AddAsync(CampAInsertar);
+                var SensorAInsertar = mapper.Map<Sensor>(sensorDto);
+                await SensorRepository.AddAsync(SensorAInsertar);
                 await SensorRepository.SaveAsync();
-                resultDto.Data = mapper.Map<SensorDto>(CampAInsertar);
+                resultDto.Data = mapper.Map<SensorDto>(SensorAInsertar);
                 return await Task.FromResult(resultDto);
             }
             catch (Exception ex)
@@ -130,7 +130,7 @@ namespace HortIntelligentApi.Domini.Implementacions
             if (!await Exists(sensorDto.Id))
             {
                 resultDto.StatusCode = StatusCodes.Status404NotFound;
-                resultDto.Errors.Add($"No existeix el camp {sensorDto.Id}");
+                resultDto.Errors.Add($"No existeix el sensor {sensorDto.Id}");
                 return await Task.FromResult(resultDto);
             }
             try

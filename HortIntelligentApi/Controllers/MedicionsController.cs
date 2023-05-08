@@ -79,10 +79,15 @@ namespace HortIntelligentApi.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IList<MedicioDto>>> GetByCampId(int campId)
         {
-            var existeixCamp = await MedicioDomini.ExisteixCamp(campId);
-            if (!existeixCamp)
-                return NotFound($"No existeix un camp amb ID: {campId}");
-            return Ok(await MedicioDomini.GetByCampId(campId));
+            var result = await MedicioDomini.GetByCampId(campId);
+            if (result.Error)
+            {
+                return StatusCode(result.StatusCode, result.ToString());
+            }
+            else
+            {
+                return Ok(result.Data);
+            }
         }
 
         /// <summary>
@@ -97,10 +102,15 @@ namespace HortIntelligentApi.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IList<MedicioDto>>> GetByVegetalId(int vegetalId)
         {
-            var existeixVegetal = await MedicioDomini.ExisteixVegetal(vegetalId);
-            if (!existeixVegetal)
-                return NotFound($"No existeix un vegetal amb ID: {vegetalId}");
-            return Ok(await MedicioDomini.GetByVegetalId(vegetalId));
+            var result = await MedicioDomini.GetByVegetalId(vegetalId);
+            if (result.Error)
+            {
+                return StatusCode(result.StatusCode, result.ToString());
+            }
+            else
+            {
+                return Ok(result.Data);
+            }
         }
 
         /// <summary>
@@ -115,10 +125,15 @@ namespace HortIntelligentApi.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IList<MedicioDto>>> GetBySensorId(int sensorId)
         {
-            var existeixMedicio = await MedicioDomini.ExisteixSensor(sensorId);
-            if (!existeixMedicio)
-                return NotFound($"No existeix un sensor amb ID: {sensorId}");
-            return Ok(await MedicioDomini.GetBySensorId(sensorId));
+            var result = await MedicioDomini.GetBySensorId(sensorId);
+            if (result.Error)
+            {
+                return StatusCode(result.StatusCode, result.ToString());
+            }
+            else
+            {
+                return Ok(result.Data);
+            }
         }
 
         /// <summary>

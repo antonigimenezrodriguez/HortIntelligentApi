@@ -48,11 +48,11 @@ namespace HortIntelligentApi.Domini.Implementacions
             ResultDto<MedicioDto> result = new ResultDto<MedicioDto>();
             try
             {
-                var camp = await MedicioRepository.GetAsync(id);
-                if (camp == null)
+                var medicio = await MedicioRepository.GetAsync(id);
+                if (medicio == null)
                 {
                     result.StatusCode = StatusCodes.Status404NotFound;
-                    result.Errors.Add($"No existeix un camp amb id: {id}");
+                    result.Errors.Add($"No existeix una medició amb id: {id}");
                     return await Task.FromResult(result);
                 }
                 else
@@ -73,6 +73,13 @@ namespace HortIntelligentApi.Domini.Implementacions
         public async Task<ResultDto<IList<MedicioDto>>> GetByCampId(int campId)
         {
             ResultDto<IList<MedicioDto>> result = new ResultDto<IList<MedicioDto>>();
+            var existeixCamp = await ExisteixCamp(campId);
+            if (!existeixCamp)
+            {
+                result.StatusCode = StatusCodes.Status400BadRequest;
+                result.Errors.Add($"No Existeix un camp amb id: {campId}");
+                return await Task.FromResult(result);
+            }
             try
             {
                 var llistat = await MedicioRepository.GetByCampIdAsync(campId);
@@ -91,6 +98,13 @@ namespace HortIntelligentApi.Domini.Implementacions
         public async Task<ResultDto<IList<MedicioDto>>> GetByVegetalId(int vegetalId)
         {
             ResultDto<IList<MedicioDto>> result = new ResultDto<IList<MedicioDto>>();
+            var existeixCamp = await ExisteixVegetal(vegetalId);
+            if (!existeixCamp)
+            {
+                result.StatusCode = StatusCodes.Status400BadRequest;
+                result.Errors.Add($"No Existeix un vegetal amb id: {vegetalId}");
+                return await Task.FromResult(result);
+            }
             try
             {
                 var llistat = await MedicioRepository.GetByVegetalIdAsync(vegetalId);
@@ -109,6 +123,13 @@ namespace HortIntelligentApi.Domini.Implementacions
         public async Task<ResultDto<IList<MedicioDto>>> GetBySensorId(int sensorId)
         {
             ResultDto<IList<MedicioDto>> result = new ResultDto<IList<MedicioDto>>();
+            var existeixCamp = await ExisteixSensor(sensorId);
+            if (!existeixCamp)
+            {
+                result.StatusCode = StatusCodes.Status400BadRequest;
+                result.Errors.Add($"No Existeix un sensor amb id: {sensorId}");
+                return await Task.FromResult(result);
+            }
             try
             {
                 var llistat = await MedicioRepository.GetBySensorIdAsync(sensorId);
