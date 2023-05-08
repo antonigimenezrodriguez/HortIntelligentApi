@@ -121,21 +121,6 @@ namespace HortIntelligentApi.Domini.Implementacions
             }            
         }
 
-        private async Task<ResultDto<CampDto>> CheckFKs(CampDto campDto)
-        {
-            ResultDto<CampDto> errorDto = new ResultDto<CampDto>();
-            if (campDto.VegetalId.HasValue)
-            {
-                var existeixVegetal = await vegetalDomini.Exists(campDto.VegetalId.Value);
-                if (!existeixVegetal)
-                {
-                    errorDto.StatusCode = StatusCodes.Status400BadRequest;
-                    errorDto.Errors.Add($"Error FK: No Existeix un vegetal amb id: {campDto.VegetalId}");
-                }
-            }
-            return await Task.FromResult(errorDto);
-        }
-
         public async Task<ResultDto<CampDto>> Put(CampDto campDto)
         {
             ResultDto<CampDto> resultDto = await CheckFKs(campDto);
@@ -167,6 +152,21 @@ namespace HortIntelligentApi.Domini.Implementacions
         public async Task<bool> Exists(int id)
         {
             return await CampRepository.ExitsAsync(id);
+        }
+
+        private async Task<ResultDto<CampDto>> CheckFKs(CampDto campDto)
+        {
+            ResultDto<CampDto> errorDto = new ResultDto<CampDto>();
+            if (campDto.VegetalId.HasValue)
+            {
+                var existeixVegetal = await vegetalDomini.Exists(campDto.VegetalId.Value);
+                if (!existeixVegetal)
+                {
+                    errorDto.StatusCode = StatusCodes.Status400BadRequest;
+                    errorDto.Errors.Add($"Error FK: No Existeix un vegetal amb id: {campDto.VegetalId}");
+                }
+            }
+            return await Task.FromResult(errorDto);
         }
     }
 }

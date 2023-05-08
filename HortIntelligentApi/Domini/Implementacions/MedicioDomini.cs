@@ -181,6 +181,26 @@ namespace HortIntelligentApi.Domini.Implementacions
             }
         }
 
+        public async Task<bool> ExisteixCamp(int campId)
+        {
+            return await CampDomini.Exists(campId);
+        }
+
+        public async Task<bool> ExisteixVegetal(int vegetalId)
+        {
+            return await VegetalDomini.Exists(vegetalId);
+        }
+
+        public async Task<bool> ExisteixSensor(int sensorId)
+        {
+            return await SensorDomini.Exists(sensorId);
+        }
+
+        public async Task<bool> Exists(int id)
+        {
+            return await MedicioRepository.ExitsAsync(id);
+        }
+
         private async Task<ResultDto<MedicioDto>> CheckFKs(MedicioDto medicioDto)
         {
             ResultDto<MedicioDto> errorDto = new ResultDto<MedicioDto>();
@@ -204,26 +224,6 @@ namespace HortIntelligentApi.Domini.Implementacions
                 errorDto.Errors.Add($"Error FK: No Existeix un sensor amb id: {medicioDto.SensorId}");
             }
             return await Task.FromResult(errorDto);
-        }
-
-        public async Task<bool> ExisteixCamp(int campId)
-        {
-            return await CampDomini.Exists(campId);
-        }
-
-        public async Task<bool> ExisteixVegetal(int vegetalId)
-        {
-            return await VegetalDomini.Exists(vegetalId);
-        }
-
-        public async Task<bool> ExisteixSensor(int sensorId)
-        {
-            return await SensorDomini.Exists(sensorId);
-        }
-
-        public async Task<bool> Exists(int id)
-        {
-            return await MedicioRepository.ExitsAsync(id);
         }
     }
 }
