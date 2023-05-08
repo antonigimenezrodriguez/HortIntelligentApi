@@ -1,5 +1,6 @@
 ﻿using HortIntelligent.Dades.Entitats;
 using HortIntelligentApi.Application.Dtos;
+using HortIntelligentApi.Domini.Implementacions;
 using HortIntelligentApi.Domini.Interficies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -29,9 +30,18 @@ namespace HortIntelligentApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IList<MedicioDto>>> Get()
         {
-            return Ok(await MedicioDomini.GetAll());
+            var result = await MedicioDomini.GetAll();
+            if (result.Error)
+            {
+                return StatusCode(result.StatusCode, result.ToString());
+            }
+            else
+            {
+                return Ok(result.Data);
+            }
         }
 
         /// <summary>
@@ -43,13 +53,18 @@ namespace HortIntelligentApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<MedicioDto>> Get(int id)
         {
-            var medicio = await MedicioDomini.Get(id);
-            if (medicio == null)
-                return NotFound($"No s'ha trobat una medició amb ID: {id}");
+            var result = await MedicioDomini.Get(id);
+            if (result.Error)
+            {
+                return StatusCode(result.StatusCode, result.ToString());
+            }
             else
-                return Ok(medicio);
+            {
+                return Ok(result.Data);
+            }
         }
 
         /// <summary>
@@ -61,6 +76,7 @@ namespace HortIntelligentApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IList<MedicioDto>>> GetByCampId(int campId)
         {
             var existeixCamp = await MedicioDomini.ExisteixCamp(campId);
@@ -78,6 +94,7 @@ namespace HortIntelligentApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IList<MedicioDto>>> GetByVegetalId(int vegetalId)
         {
             var existeixVegetal = await MedicioDomini.ExisteixVegetal(vegetalId);
@@ -95,6 +112,7 @@ namespace HortIntelligentApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IList<MedicioDto>>> GetBySensorId(int sensorId)
         {
             var existeixMedicio = await MedicioDomini.ExisteixSensor(sensorId);
@@ -117,13 +135,11 @@ namespace HortIntelligentApi.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
         public async Task<ActionResult<int>> Delete(int id)
         {
-            if(!await MedicioDomini.Exists(id))
-                return NotFound($"No s'ha trobat una medició amb ID: {id}");
             var result = await MedicioDomini.Delete(id);
-            if (result)
+            if (!result.Error)
                 return Ok(id);
             else
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Valor no esperat al borrar la medició {id}");
+                return StatusCode(result.StatusCode, result.ToString());
         }
 
         /// <summary>
@@ -133,31 +149,18 @@ namespace HortIntelligentApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<MedicioDto>> Post([FromBody] MedicioDto medicioDto)
         {
             if (medicioDto == null)
                 return BadRequest();
-            var existeixCamp = await MedicioDomini.ExisteixCamp(medicioDto.CampId);
-            var existeixVegetal = await MedicioDomini.ExisteixVegetal(medicioDto.VegetalId);
-            var existeixSensor = await MedicioDomini.ExisteixSensor(medicioDto.SensorId);
-
-            string errorFK = string.Empty;
-
-            if(!existeixCamp || !existeixVegetal || !existeixSensor)
-            {
-                errorFK = "Les següent FK no existeixen: ";
-                if (!existeixCamp)
-                    errorFK += $"\r\nCamp amb id: {medicioDto.CampId}";
-                if(!existeixVegetal)
-                    errorFK += $"\r\nVegetal amb id: {medicioDto.VegetalId}";
-                if(!existeixSensor)
-                errorFK += $"\r\nSensor amb id: {medicioDto.SensorId}";
-
-                return BadRequest(errorFK);
-            }
-            return Ok(await MedicioDomini.Post(medicioDto));
+            ResultDto<MedicioDto> resultat = await MedicioDomini.Post(medicioDto);
+            if (resultat.Error)
+                return StatusCode(resultat.StatusCode, resultat.ToString());
+            else
+                return Ok(resultat.Data);
         }
     }
 }

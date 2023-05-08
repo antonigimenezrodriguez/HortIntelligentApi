@@ -1,4 +1,5 @@
 ﻿using HortIntelligentApi.Application.Dtos;
+using HortIntelligentApi.Domini.Implementacions;
 using HortIntelligentApi.Domini.Interficies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -28,9 +29,9 @@ namespace HortIntelligentApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IList<SensorDto>> Get()
+        public async Task<ActionResult<IList<SensorDto>>> Get()
         {
-            return await SensorDomini.GetAll();
+            return Ok(await SensorDomini.GetAll());
         }
 
         /// <summary>
@@ -42,9 +43,13 @@ namespace HortIntelligentApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<SensorDto> Get(int id)
+        public async Task<ActionResult<SensorDto>> Get(int id)
         {
-            return await SensorDomini.Get(id);
+            var sensor = await SensorDomini.Get(id);
+            if (sensor == null)
+                return NotFound($"No s'ha trobat un sensor amb ID: {id}");
+            else
+                return Ok(sensor);
         }
 
         /// <summary>
@@ -59,9 +64,15 @@ namespace HortIntelligentApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
-        public async Task<bool> Delete(int id)
+        public async Task<ActionResult<int>> Delete(int id)
         {
-            return await SensorDomini.Delete(id);
+            if (!await SensorDomini.Exists(id))
+                return NotFound($"No s'ha trobat un sensor amb ID: {id}");
+            var result = await SensorDomini.Delete(id);
+            if (result)
+                return Ok(id);
+            else
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Valor no esperat al borrar el sensor {id}");
         }
 
         /// <summary>
@@ -75,9 +86,11 @@ namespace HortIntelligentApi.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
-        public async Task<SensorDto> Post([FromBody] SensorDto sensorDto)
+        public async Task<ActionResult<SensorDto>> Post([FromBody] SensorDto sensorDto)
         {
-            return await SensorDomini.Post(sensorDto);
+            if (sensorDto == null)
+                return BadRequest();
+            return Ok(await SensorDomini.Post(sensorDto));
         }
 
         /// <summary>
@@ -92,8 +105,12 @@ namespace HortIntelligentApi.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
-        public async Task<SensorDto> Put([FromBody] SensorDto sensorDto)
+        public async Task<ActionResult<SensorDto>> Put([FromBody] SensorDto sensorDto)
         {
+            if (sensorDto == null)
+                return BadRequest();
+            if (!await SensorDomini.Exists(sensorDto.Id))
+                return NotFound($"No s'ha trobat un sensor amb ID: {sensorDto.Id}");
             return await SensorDomini.Put(sensorDto);
         }
     }

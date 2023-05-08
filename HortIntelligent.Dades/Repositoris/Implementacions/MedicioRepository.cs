@@ -62,7 +62,7 @@ namespace HortIntelligent.Dades.Repositoris.Implementacions
             return (await GetAllAsync()).Where(w => w.CampId == campId).ToList();
         }
 
-        public async Task<IList<Medicio>> GetBySensorId(int sensorId)
+        public async Task<IList<Medicio>> GetBySensorIdAsync(int sensorId)
         {
             return (await GetAllAsync()).Where(w => w.SensorId == sensorId).ToList();
         }

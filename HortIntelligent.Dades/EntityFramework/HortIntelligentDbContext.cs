@@ -56,7 +56,6 @@ namespace HortIntelligent.Dades.EntityFramework
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            //modelBuilder.Entity<Sensor>().HasQueryFilter(p => !p.IsDeleted);
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {

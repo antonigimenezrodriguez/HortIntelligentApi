@@ -111,14 +111,14 @@ namespace HortIntelligentApi.Domini.Implementacions
                 await CampRepository.AddAsync(CampAInsertar);
                 await CampRepository.SaveAsync();
                 resultDto.Data = mapper.Map<CampDto>(CampAInsertar);
+                return await Task.FromResult(resultDto);
             }
             catch (Exception ex)
             {
                 resultDto.Errors.Add(ex.Message);
                 resultDto.StatusCode = StatusCodes.Status500InternalServerError;
-            }
-
-            return await Task.FromResult(resultDto);
+                return await Task.FromResult(resultDto);
+            }            
         }
 
         private async Task<ResultDto<CampDto>> CheckFKs(CampDto campDto)
