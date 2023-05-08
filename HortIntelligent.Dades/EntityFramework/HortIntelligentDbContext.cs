@@ -20,6 +20,7 @@ namespace HortIntelligent.Dades.EntityFramework
         public DbSet<Medicio> Medicions { get; set; }
         public DbSet<Sensor> Sensors { get; set; }
         public DbSet<Vegetal> Vegetals { get; set; }
+        public DbSet<ApiKey> ApiKeys { get; set; }
 
         public override int SaveChanges()
         {

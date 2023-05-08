@@ -2,6 +2,7 @@ using AutoMapper;
 using HortIntelligent.Dades.EntityFramework;
 using HortIntelligent.Dades.Repositoris.Implementacions;
 using HortIntelligent.Dades.Repositoris.Interficies;
+using HortIntelligentApi.Domini.ApiKey;
 using HortIntelligentApi.Domini.AutoMapper;
 using HortIntelligentApi.Domini.Implementacions;
 using HortIntelligentApi.Domini.Interficies;
@@ -111,6 +112,10 @@ namespace HortIntelligentApi
             builder.Services.AddTransient<IMedicioRepository, MedicioRepository>();
             builder.Services.AddTransient<ISensorRepository, SensorRepository>();
             builder.Services.AddTransient<IVegetalRepository, VegetalRepository>();
+
+            builder.Services.AddTransient<ApiKeyAuthorizationFilter>();
+
+            builder.Services.AddTransient<IApiKeyValidator, ApiKeyValidator>();
 
             builder.Services.AddResponseCaching();
 

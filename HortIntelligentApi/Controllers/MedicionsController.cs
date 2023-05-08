@@ -1,5 +1,6 @@
 ﻿using HortIntelligent.Dades.Entitats;
 using HortIntelligentApi.Application.Dtos;
+using HortIntelligentApi.Domini.ApiKey;
 using HortIntelligentApi.Domini.Implementacions;
 using HortIntelligentApi.Domini.Interficies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,7 +14,6 @@ namespace HortIntelligentApi.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class MedicionsController : ControllerBase
     {
         public IMedicioDomini MedicioDomini { get; set; }
@@ -28,6 +28,7 @@ namespace HortIntelligentApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -50,6 +51,7 @@ namespace HortIntelligentApi.Controllers
         /// <param name="id">ID de la medició</param>
         /// <returns></returns>
         [HttpGet("id")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -73,6 +75,7 @@ namespace HortIntelligentApi.Controllers
         /// <param name="campId">ID del camp</param>
         /// <returns></returns>
         [HttpGet("GetByCampId/campId")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -96,6 +99,7 @@ namespace HortIntelligentApi.Controllers
         /// <param name="vegetalId">ID del vegetal</param>
         /// <returns></returns>
         [HttpGet("GetByVegetalId/vegetalId")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -119,6 +123,7 @@ namespace HortIntelligentApi.Controllers
         /// <param name="sensorId">ID del sensor</param>
         /// <returns></returns>
         [HttpGet("GetBySensorId/sensorId")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -163,6 +168,7 @@ namespace HortIntelligentApi.Controllers
         /// <param name="medicioDto">Medició a afegir</param>
         /// <returns></returns>
         [HttpPost]
+        [ApiKey]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

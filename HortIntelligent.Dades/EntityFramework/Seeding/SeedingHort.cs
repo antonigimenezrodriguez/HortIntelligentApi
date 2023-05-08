@@ -48,6 +48,15 @@ namespace HortIntelligent.Dades.EntityFramework.Seeding
                 ClaimValue = "true"
             };
             modelBuilder.Entity<IdentityUserClaim<string>>().HasData(antoniAdminClaim);
+
+            var ApiKeyArduino = new ApiKey()
+            {
+                ApiKeyId = 1,
+                Key = Guid.Parse("0e6b2066-9e98-4783-8c82-c3530aa8a197"),
+                Name = "Arduinos",
+                Exipres = new DateTime(2025, 12, 31)
+            };
+            modelBuilder.Entity<ApiKey>().HasData(ApiKeyArduino);
         }
     }
 }
