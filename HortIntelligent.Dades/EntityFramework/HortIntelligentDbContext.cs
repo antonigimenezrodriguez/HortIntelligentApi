@@ -21,13 +21,41 @@ namespace HortIntelligent.Dades.EntityFramework
         public DbSet<Sensor> Sensors { get; set; }
         public DbSet<Vegetal> Vegetals { get; set; }
 
+        public override int SaveChanges()
+        {
+            var entities = ChangeTracker.Entries().Where(w => w.State == EntityState.Deleted);
+            foreach (var entity in entities)
+            {
+                try
+                {
+                    entity.CurrentValues["IsDeleted"] = true;
+                    entity.State = EntityState.Modified;
+                }
+                catch { }
+            }
+            return base.SaveChanges();
+        }
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entities = ChangeTracker.Entries().Where(w => w.State == EntityState.Deleted);
+            foreach (var entity in entities)
+            {
+                try
+                {
+                    var asd = entity.CurrentValues["IsDeleted"];
+                    entity.CurrentValues["IsDeleted"] = true;
+                    entity.State = EntityState.Modified;
+                }
+                catch { }
+            }
+            return base.SaveChangesAsync(cancellationToken);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            //modelBuilder.Entity<Sensor>().HasQueryFilter(p => !p.IsDeleted);
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
